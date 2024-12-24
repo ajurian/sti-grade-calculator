@@ -1,7 +1,7 @@
 // CODE FROM:
 // https://stackoverflow.com/questions/19327749/javascript-blob-filename-without-link
 
-export default function downloadBlob(blob: Blob | null) {
+export default function downloadBlob(blob: Blob | null, filename: string) {
     if (blob === null) {
         return;
     }
@@ -13,7 +13,7 @@ export default function downloadBlob(blob: Blob | null) {
 
     const url = URL.createObjectURL(blob);
     link.href = url;
-    link.download = "123.png";
+    link.download = filename;
 
     link.click();
 
