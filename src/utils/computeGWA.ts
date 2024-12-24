@@ -9,5 +9,5 @@ export default function computeGWA(grades: number[], weights: number[]) {
         gwa += grades[i] * weights[i];
     }
 
-    return gwa;
+    return Number(gwa.toFixed(2));
 }
