@@ -4,10 +4,10 @@ import Result from "@/components/Home/GradeCalculator/Result";
 import { useHistory } from "@/components/Home/HistoryProvider";
 import { Button } from "@/components/ui/button";
 import computeGWA from "@/utils/computeGWA";
-import roundTwo from "@/utils/roundTwo";
 import scaleGrade from "@/utils/scaleGrade";
 import { useState } from "react";
 import AddToHistoryDialogTrigger from "./AddToHistoryDialogTrigger";
+import roundTwo from "@/utils/roundTwo";
 
 export default function GradeCalculator() {
     const [prelimInput, setPrelimInput] = useState("");
@@ -90,7 +90,7 @@ export default function GradeCalculator() {
     };
 
     return (
-        <div className="w-full max-w-[calc(16rem+55ch)] flex-grow border-b p-8 xl:border-r">
+        <div className="h-fit w-full max-w-[calc(16rem+55ch)] flex-grow border-b p-8 xl:sticky xl:top-0 xl:border-b-0">
             <h1 className="mb-2 text-xl font-semibold">Grade Calculator</h1>
             <div className="mb-8 text-slate-500">Enter your grades</div>
 
