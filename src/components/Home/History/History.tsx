@@ -34,7 +34,7 @@ export default function History() {
     return (
         <div
             ref={containerRef}
-            className="box-content min-h-[384px] max-w-[calc(16rem+55ch)] flex-grow overflow-hidden p-4 font-mono text-sm"
+            className="box-border min-h-[384px] w-full max-w-[calc(16rem+55ch)] flex-grow overflow-hidden p-4 font-mono text-sm"
         >
             <div className="flex items-center gap-4 p-4 font-sans">
                 <h2 className="mr-auto text-lg font-medium">History</h2>

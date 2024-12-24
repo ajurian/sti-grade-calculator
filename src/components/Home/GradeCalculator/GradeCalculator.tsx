@@ -70,7 +70,7 @@ export default function GradeCalculator() {
     };
 
     return (
-        <div className="box-content max-w-[calc(16rem+55ch)] flex-grow border-b p-8 xl:border-r">
+        <div className="w-full max-w-[calc(16rem+55ch)] flex-grow border-b p-8 xl:border-r">
             <h1 className="mb-2 text-xl font-semibold">Grade Calculator</h1>
             <div className="mb-8 text-slate-500">Enter your grades</div>
 
@@ -101,13 +101,18 @@ export default function GradeCalculator() {
                 />
             </div>
 
-            <div className="mt-4 flex gap-4">
-                <Button onClick={handleCalculate}>Calculate</Button>
+            <div className="mt-4 flex flex-wrap gap-4">
+                <Button
+                    className="flex-grow sm:flex-grow-0"
+                    onClick={handleCalculate}
+                >
+                    Calculate
+                </Button>
                 {isCalculated && (
                     <AddToHistoryDialogTrigger onAdd={handleAddToHistory} />
                 )}
                 <Button
-                    className="ml-auto"
+                    className="basis-full sm:basis-auto"
                     variant="secondary"
                     onClick={handleReset}
                 >
