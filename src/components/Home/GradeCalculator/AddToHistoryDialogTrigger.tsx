@@ -44,7 +44,7 @@ export default function AddToHistoryDialogTrigger({
                         }
                     />
                 </div>
-                <DialogFooter>
+                <DialogFooter className="gap-2">
                     <DialogClose asChild>
                         <Button variant="secondary">Cancel</Button>
                     </DialogClose>

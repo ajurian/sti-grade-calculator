@@ -57,7 +57,7 @@ export default function SaveDialogTrigger({ onSave }: SaveDialogProps) {
                     />
                     <div className="text-slate-700">.png</div>
                 </div>
-                <DialogFooter>
+                <DialogFooter className="gap-2">
                     <DialogClose asChild>
                         <Button variant="secondary">Cancel</Button>
                     </DialogClose>
