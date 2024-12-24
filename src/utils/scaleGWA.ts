@@ -5,7 +5,7 @@ export default function scaleGWA(gwa: number) {
     else if (gwa >= 88.5) return "1.75";
     else if (gwa >= 85.5) return "2.00";
     else if (gwa >= 81.5) return "2.25";
-    else if (gwa >= 77.5) return "2.5";
+    else if (gwa >= 77.5) return "2.50";
     else if (gwa >= 73.5) return "2.75";
     else if (gwa >= 69.5) return "3.00";
     return "5.00";

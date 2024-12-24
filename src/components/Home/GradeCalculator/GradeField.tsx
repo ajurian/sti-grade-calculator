@@ -1,19 +1,18 @@
-import React from "react";
-import { Input } from "../ui/input";
+import { Input } from "@/components/ui/input";
 
-interface GradeInputProps {
+interface GradeFieldProps {
     id: string;
     label: string;
     value: string;
     onValueChange: (value: string) => void;
 }
 
-export default function GradeInput({
+export default function GradeField({
     id,
     label,
     value,
     onValueChange,
-}: GradeInputProps) {
+}: GradeFieldProps) {
     return (
         <div>
             <label className="mb-1 block font-medium" htmlFor={id}>
@@ -25,14 +24,6 @@ export default function GradeInput({
                 value={value}
                 onChange={(e) => onValueChange(e.currentTarget.value)}
                 onFocus={(e) => e.currentTarget.select()}
-                onKeyDown={(e) =>
-                    !e.altKey &&
-                    !e.ctrlKey &&
-                    !e.shiftKey &&
-                    e.key.length == 1 &&
-                    !/^\d+$/g.test(e.key) &&
-                    e.preventDefault()
-                }
             />
         </div>
     );
