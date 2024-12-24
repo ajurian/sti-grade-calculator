@@ -4,7 +4,8 @@ import Result from "@/components/Home/GradeCalculator/Result";
 import { useHistory } from "@/components/Home/HistoryProvider";
 import { Button } from "@/components/ui/button";
 import computeGWA from "@/utils/computeGWA";
-import scaleGWA from "@/utils/scaleGWA";
+import roundTwo from "@/utils/roundTwo";
+import scaleGrade from "@/utils/scaleGrade";
 import { useState } from "react";
 import AddToHistoryDialogTrigger from "./AddToHistoryDialogTrigger";
 
@@ -15,26 +16,46 @@ export default function GradeCalculator() {
     const [finalInput, setFinalInput] = useState("");
     const [isCalculated, setIsCalculated] = useState(false);
 
+    const [prelim, setPrelim] = useState(0);
+    const [midterm, setMidterm] = useState(0);
+    const [prefinal, setPrefinal] = useState(0);
+    const [final, setFinal] = useState(0);
     const [gwa, setGWA] = useState(0);
-    const [scale, setScale] = useState<HistoryItem["scale"]>("5.00");
+    const [prelimScale, setPrelimScale] = useState<Scale>("5.00");
+    const [midtermScale, setMidtermScale] = useState<Scale>("5.00");
+    const [prefinalScale, setPrefinalScale] = useState<Scale>("5.00");
+    const [finalScale, setFinalScale] = useState<Scale>("5.00");
+    const [gwaScale, setGWAScale] = useState<Scale>("5.00");
     const [status, setStatus] = useState<HistoryItem["status"]>("Failed");
 
     const { addToHistory } = useHistory();
 
     const handleCalculate = () => {
-        const prelim = Number(prelimInput);
-        const midterm = Number(midtermInput);
-        const prefinal = Number(prefinalInput);
-        const final = Number(finalInput);
+        const prelim = roundTwo(Number(prelimInput));
+        const midterm = roundTwo(Number(midtermInput));
+        const prefinal = roundTwo(Number(prefinalInput));
+        const final = roundTwo(Number(finalInput));
         const gwa = computeGWA(
             [prelim, midterm, prefinal, final],
             [0.2, 0.2, 0.2, 0.4],
         );
-        const scale = scaleGWA(gwa);
-        const status = scale === "5.00" ? "Failed" : "Passed";
+        const prelimScale = scaleGrade(prelim);
+        const midtermScale = scaleGrade(midterm);
+        const prefinalScale = scaleGrade(prefinal);
+        const finalScale = scaleGrade(final);
+        const gwaScale = scaleGrade(gwa);
+        const status = gwaScale === "5.00" ? "Failed" : "Passed";
 
+        setPrelim(prelim);
+        setMidterm(midterm);
+        setPrefinal(prefinal);
+        setFinal(final);
         setGWA(gwa);
-        setScale(scale);
+        setPrelimScale(prelimScale);
+        setMidtermScale(midtermScale);
+        setPrefinalScale(prefinalScale);
+        setFinalScale(finalScale);
+        setGWAScale(gwaScale);
         setStatus(status);
         setIsCalculated(true);
     };
@@ -44,11 +65,6 @@ export default function GradeCalculator() {
             return;
         }
 
-        const prelim = Number(prelimInput);
-        const midterm = Number(midtermInput);
-        const prefinal = Number(prefinalInput);
-        const final = Number(finalInput);
-
         addToHistory({
             subject,
             prelim,
@@ -56,7 +72,11 @@ export default function GradeCalculator() {
             prefinal,
             final,
             gwa,
-            scale,
+            prelimScale,
+            midtermScale,
+            prefinalScale,
+            finalScale,
+            gwaScale,
             status,
         });
     };
@@ -123,7 +143,7 @@ export default function GradeCalculator() {
             <div className="mt-8 flex flex-wrap gap-8">
                 <GradingSystem />
                 {isCalculated && (
-                    <Result gwa={gwa} scale={scale} status={status} />
+                    <Result gwa={gwa} gwaScale={gwaScale} status={status} />
                 )}
             </div>
         </div>

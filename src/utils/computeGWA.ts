@@ -1,3 +1,5 @@
+import roundTwo from "./roundTwo";
+
 export default function computeGWA(grades: number[], weights: number[]) {
     if (grades.length !== weights.length) {
         throw new Error("Unmatched dimensions: grades, weights");
@@ -9,5 +11,5 @@ export default function computeGWA(grades: number[], weights: number[]) {
         gwa += grades[i] * weights[i];
     }
 
-    return Number(gwa.toFixed(2));
+    return roundTwo(gwa);
 }

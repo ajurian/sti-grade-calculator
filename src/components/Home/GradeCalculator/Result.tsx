@@ -2,11 +2,11 @@ import { cn } from "@/lib/utils";
 
 interface ResultProps {
     gwa: number;
-    scale: string;
-    status: string;
+    gwaScale: Scale;
+    status: HistoryItem["status"];
 }
 
-export default function Result({ gwa, scale, status }: ResultProps) {
+export default function Result({ gwa, gwaScale, status }: ResultProps) {
     return (
         <div>
             <h2 className="mb-1 text-lg font-semibold">Result</h2>
@@ -20,7 +20,7 @@ export default function Result({ gwa, scale, status }: ResultProps) {
                 <div>
                     Scale:{"  "}
                     <span className="font-semibold text-foreground">
-                        {scale}
+                        {gwaScale}
                     </span>
                 </div>
                 <div>
@@ -28,9 +28,9 @@ export default function Result({ gwa, scale, status }: ResultProps) {
                     <span
                         className={cn(
                             "font-bold",
-                            scale === "5.00"
-                                ? "text-red-500"
-                                : "text-green-500",
+                            status === "Passed"
+                                ? "text-green-500"
+                                : "text-red-500",
                         )}
                     >
                         {status}

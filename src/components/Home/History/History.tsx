@@ -8,8 +8,9 @@ import {
 } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
 import downloadBlob from "@/utils/downloadBlob";
+import scaleGrade from "@/utils/scaleGrade";
 import html2canvas from "html2canvas-pro";
-import { useRef } from "react";
+import React, { useRef } from "react";
 import { Button } from "../../ui/button";
 import { useHistory } from "../HistoryProvider";
 import SaveDialogTrigger from "./SaveDialogTrigger";
@@ -52,6 +53,7 @@ export default function History() {
             >
                 <TableHeader>
                     <TableRow>
+                        <TableHead className="box-content min-w-[5ch]" />
                         <TableHead className="box-content min-w-[10ch]">
                             Subject
                         </TableHead>
@@ -66,34 +68,50 @@ export default function History() {
                         <TableHead className="box-content min-w-[6ch]">
                             GWA
                         </TableHead>
-                        <TableHead>Scale</TableHead>
                         <TableHead>Status</TableHead>
                     </TableRow>
                 </TableHeader>
 
                 <TableBody>
                     {history.map((item, idx) => (
-                        <TableRow key={idx}>
-                            <TableCell className="whitespace-nowrap">
-                                {item.subject}
-                            </TableCell>
-                            <TableCell>{item.prelim.toFixed(2)}</TableCell>
-                            <TableCell>{item.midterm.toFixed(2)}</TableCell>
-                            <TableCell>{item.prefinal.toFixed(2)}</TableCell>
-                            <TableCell>{item.final.toFixed(2)}</TableCell>
-                            <TableCell>{item.gwa.toFixed(2)}</TableCell>
-                            <TableCell>{item.scale}</TableCell>
-                            <TableCell
-                                className={cn(
-                                    "whitespace-nowrap font-semibold",
-                                    item.scale === "5.00"
-                                        ? "text-red-500"
-                                        : "text-green-500",
-                                )}
-                            >
-                                {item.status}
-                            </TableCell>
-                        </TableRow>
+                        <React.Fragment key={idx}>
+                            <TableRow>
+                                <TableCell />
+                                <TableCell>{item.subject}</TableCell>
+                                <TableCell>{item.prelim.toFixed(2)}</TableCell>
+                                <TableCell>{item.midterm.toFixed(2)}</TableCell>
+                                <TableCell>
+                                    {item.prefinal.toFixed(2)}
+                                </TableCell>
+                                <TableCell>{item.final.toFixed(2)}</TableCell>
+                                <TableCell>{item.gwa.toFixed(2)}</TableCell>
+                                <TableCell
+                                    className={cn(
+                                        "whitespace-nowrap font-semibold",
+                                        item.status === "Passed"
+                                            ? "text-green-500"
+                                            : "text-red-500",
+                                    )}
+                                >
+                                    {item.status}
+                                </TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell className="font-medium text-muted-foreground">
+                                    Scale
+                                </TableCell>
+                                <TableCell />
+                                <TableCell>{scaleGrade(item.prelim)}</TableCell>
+                                <TableCell>
+                                    {scaleGrade(item.midterm)}
+                                </TableCell>
+                                <TableCell>
+                                    {scaleGrade(item.prefinal)}
+                                </TableCell>
+                                <TableCell>{scaleGrade(item.final)}</TableCell>
+                                <TableCell>{scaleGrade(item.gwa)}</TableCell>
+                            </TableRow>
+                        </React.Fragment>
                     ))}
                     {history.length === 0 && (
                         <TableRow>

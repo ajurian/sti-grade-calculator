@@ -1,4 +1,7 @@
-export default function scaleGWA(gwa: number) {
+import roundTwo from "./roundTwo";
+
+export default function scaleGrade(gwa: number) {
+    gwa = roundTwo(gwa);
     if (gwa >= 97.5) return "1.00";
     else if (gwa >= 94.5) return "1.25";
     else if (gwa >= 91.5) return "1.50";
