@@ -25,7 +25,11 @@ export default function AddToHistoryDialogTrigger({
     return (
         <Dialog>
             <DialogTrigger asChild>
-                <Button variant="outline" onClick={() => setSubject("")}>
+                <Button
+                    className="mt-2 w-full"
+                    variant="outline"
+                    onClick={() => setSubject("")}
+                >
                     Add to History
                 </Button>
             </DialogTrigger>

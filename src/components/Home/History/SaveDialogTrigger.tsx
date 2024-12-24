@@ -9,11 +9,19 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
 import { useRef, useState } from "react";
 import { Button } from "../../ui/button";
+import { SupportedExtension } from "./History";
 
 interface SaveDialogProps {
-    onSave: (filename: string) => void;
+    onSave: (basename: string, extension: SupportedExtension) => void;
 }
 
 function generateBasename() {
@@ -30,6 +38,7 @@ function generateBasename() {
 export default function SaveDialogTrigger({ onSave }: SaveDialogProps) {
     const [basename, setBasename] = useState("");
     const [defaultBasename, setDefaultBasename] = useState("");
+    const [extension, setExtension] = useState("png");
     const saveButtonRef = useRef<HTMLButtonElement>(null);
 
     return (
@@ -43,7 +52,7 @@ export default function SaveDialogTrigger({ onSave }: SaveDialogProps) {
                 <DialogHeader>
                     <DialogTitle>Download</DialogTitle>
                     <DialogDescription>
-                        Save the table as .png file
+                        Save the table as .{extension} file
                     </DialogDescription>
                 </DialogHeader>
                 <div className="flex items-center gap-1">
@@ -55,7 +64,16 @@ export default function SaveDialogTrigger({ onSave }: SaveDialogProps) {
                             e.key === "Enter" && saveButtonRef.current?.click()
                         }
                     />
-                    <div className="text-slate-700">.png</div>
+                    <Select value={extension} onValueChange={setExtension}>
+                        <SelectTrigger className="w-fit">
+                            <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="png">.png</SelectItem>
+                            <SelectItem value="csv">.csv</SelectItem>
+                            <SelectItem value="docx">.docx</SelectItem>
+                        </SelectContent>
+                    </Select>
                 </div>
                 <DialogFooter className="gap-2">
                     <DialogClose asChild>
@@ -65,7 +83,10 @@ export default function SaveDialogTrigger({ onSave }: SaveDialogProps) {
                         <Button
                             ref={saveButtonRef}
                             onClick={() =>
-                                onSave((basename || defaultBasename) + ".png")
+                                onSave(
+                                    basename || defaultBasename,
+                                    extension as SupportedExtension,
+                                )
                             }
                         >
                             Save

@@ -1,13 +1,11 @@
 import GradeField from "@/components/Home/GradeCalculator/GradeField";
 import GradingSystem from "@/components/Home/GradeCalculator/GradingSystem";
-import Result from "@/components/Home/GradeCalculator/Result";
-import { useHistory } from "@/components/Home/HistoryProvider";
 import { Button } from "@/components/ui/button";
 import computeGWA from "@/utils/computeGWA";
+import roundTwo from "@/utils/roundTwo";
 import scaleGrade from "@/utils/scaleGrade";
 import { useState } from "react";
-import AddToHistoryDialogTrigger from "./AddToHistoryDialogTrigger";
-import roundTwo from "@/utils/roundTwo";
+import Result from "./Result";
 
 export default function GradeCalculator() {
     const [prelimInput, setPrelimInput] = useState("");
@@ -21,14 +19,7 @@ export default function GradeCalculator() {
     const [prefinal, setPrefinal] = useState(0);
     const [final, setFinal] = useState(0);
     const [gwa, setGWA] = useState(0);
-    const [prelimScale, setPrelimScale] = useState<Scale>("5.00");
-    const [midtermScale, setMidtermScale] = useState<Scale>("5.00");
-    const [prefinalScale, setPrefinalScale] = useState<Scale>("5.00");
-    const [finalScale, setFinalScale] = useState<Scale>("5.00");
-    const [gwaScale, setGWAScale] = useState<Scale>("5.00");
     const [status, setStatus] = useState<HistoryItem["status"]>("Failed");
-
-    const { addToHistory } = useHistory();
 
     const handleCalculate = () => {
         const prelim = roundTwo(Number(prelimInput));
@@ -39,10 +30,6 @@ export default function GradeCalculator() {
             [prelim, midterm, prefinal, final],
             [0.2, 0.2, 0.2, 0.4],
         );
-        const prelimScale = scaleGrade(prelim);
-        const midtermScale = scaleGrade(midterm);
-        const prefinalScale = scaleGrade(prefinal);
-        const finalScale = scaleGrade(final);
         const gwaScale = scaleGrade(gwa);
         const status = gwaScale === "5.00" ? "Failed" : "Passed";
 
@@ -51,34 +38,8 @@ export default function GradeCalculator() {
         setPrefinal(prefinal);
         setFinal(final);
         setGWA(gwa);
-        setPrelimScale(prelimScale);
-        setMidtermScale(midtermScale);
-        setPrefinalScale(prefinalScale);
-        setFinalScale(finalScale);
-        setGWAScale(gwaScale);
         setStatus(status);
         setIsCalculated(true);
-    };
-
-    const handleAddToHistory = (subject: string) => {
-        if (!isCalculated) {
-            return;
-        }
-
-        addToHistory({
-            subject,
-            prelim,
-            midterm,
-            prefinal,
-            final,
-            gwa,
-            prelimScale,
-            midtermScale,
-            prefinalScale,
-            finalScale,
-            gwaScale,
-            status,
-        });
     };
 
     const handleReset = () => {
@@ -90,11 +51,11 @@ export default function GradeCalculator() {
     };
 
     return (
-        <div className="h-fit w-full max-w-[calc(16rem+55ch)] flex-grow border-b p-8 xl:sticky xl:top-0 xl:border-b-0">
+        <div className="w-full max-w-[calc(14rem+50ch)] flex-grow border-b p-8 xl:sticky xl:top-0 xl:h-screen xl:border-b-0 xl:border-r">
             <h1 className="mb-2 text-xl font-semibold">Grade Calculator</h1>
             <div className="mb-8 text-slate-500">Enter your grades</div>
 
-            <div className="grid grid-cols-2 grid-rows-2 gap-4">
+            <div className="xs:grid-cols-2 xs:grid-rows-2 grid gap-4">
                 <GradeField
                     id="prelim"
                     label="Prelim Grade"
@@ -123,27 +84,30 @@ export default function GradeCalculator() {
 
             <div className="mt-4 flex flex-wrap gap-4">
                 <Button
-                    className="flex-grow sm:flex-grow-0"
+                    className="xs:basis-0 flex-1 basis-full sm:flex-grow-0"
                     onClick={handleCalculate}
                 >
                     Calculate
                 </Button>
-                {isCalculated && (
-                    <AddToHistoryDialogTrigger onAdd={handleAddToHistory} />
-                )}
                 <Button
-                    className="basis-full sm:basis-auto"
+                    className="xs:basis-0 flex-1 basis-full sm:flex-grow-0"
                     variant="secondary"
                     onClick={handleReset}
                 >
                     Reset
                 </Button>
             </div>
-
             <div className="mt-8 flex flex-wrap gap-8">
                 <GradingSystem />
                 {isCalculated && (
-                    <Result gwa={gwa} gwaScale={gwaScale} status={status} />
+                    <Result
+                        prelim={prelim}
+                        midterm={midterm}
+                        prefinal={prefinal}
+                        final={final}
+                        gwa={gwa}
+                        status={status}
+                    />
                 )}
             </div>
         </div>
