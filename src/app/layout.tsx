@@ -1,4 +1,4 @@
-import HistoryProvider from "@/components/Home/HistoryProvider";
+import GradesProvider from "@/components/Home/GradesProvider";
 import { Analytics } from "@vercel/analytics/react";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
@@ -30,7 +30,7 @@ export default function RootLayout({
                 className={`${geistSans.variable} ${geistMono.variable} antialiased`}
             >
                 <Analytics />
-                <HistoryProvider>{children}</HistoryProvider>
+                <GradesProvider>{children}</GradesProvider>
             </body>
         </html>
     );

@@ -2,7 +2,7 @@ export default function GradingSystem() {
     return (
         <div>
             <h2 className="mb-1 text-lg font-semibold">Grading System</h2>
-            <ul className="list-inside list-disc whitespace-pre font-mono text-sm text-slate-500">
+            <ul className="list-inside list-disc whitespace-pre font-mono text-sm text-muted-foreground">
                 <li>97.50 - 100.00% (1.00) Excellent</li>
                 <li>94.50 -{"  "}97.49% (1.25) Very Good</li>
                 <li>91.50 -{"  "}94.49% (1.50) Very Good</li>

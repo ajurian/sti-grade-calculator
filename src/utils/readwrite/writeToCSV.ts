@@ -1,9 +1,9 @@
 import { stringify } from "csv-stringify/sync";
 
-export default function saveToCSV(history: HistoryItem[]) {
+export default function writeToCSV(grades: GradesItem[]) {
     const content = stringify([
         ["Subject", "Prelim", "Midterm", "Pre-final", "Final", "GWA", "Status"],
-        ...history.map((item) => [
+        ...grades.map((item) => [
             item.subject,
             item.prelim.toFixed(2),
             item.midterm.toFixed(2),

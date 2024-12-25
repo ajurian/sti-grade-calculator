@@ -8,7 +8,7 @@ import {
     WidthType,
 } from "docx";
 
-export default async function saveToDocx(history: HistoryItem[]) {
+export default async function writeToDocx(grades: GradesItem[]) {
     const table = new Table({
         width: {
             size: 100,
@@ -31,7 +31,7 @@ export default async function saveToDocx(history: HistoryItem[]) {
                         }),
                 ),
             }),
-            ...history.map(
+            ...grades.map(
                 (item) =>
                     new TableRow({
                         children: [

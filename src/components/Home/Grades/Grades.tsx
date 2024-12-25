@@ -8,36 +8,35 @@ import {
 } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
 import downloadBlob from "@/utils/downloadBlob";
-import saveToDocx from "@/utils/saveToDocx";
-import scaleGrade from "@/utils/scaleGrade";
+import scaleGrade from "@/utils/grade/scaleGrade";
+import writeToCSV from "@/utils/readwrite/writeToCSV";
+import writeToDocx from "@/utils/readwrite/writeToDocx";
 import html2canvas from "html2canvas-pro";
 import { useRef } from "react";
 import { Button } from "../../ui/button";
-import { useHistory } from "../HistoryProvider";
-import SaveDialogTrigger from "./SaveDialogTrigger";
-import saveToCSV from "@/utils/saveToCSV";
+import { useGrades } from "../GradesProvider";
+import ExportDialogTrigger from "./ExportDialogTrigger";
+import ImportButton from "./ImportButton";
 
-export type SupportedExtension = "png" | "csv" | "docx";
-
-export default function History() {
-    const { history, clearHistory } = useHistory();
+export default function Grades() {
+    const { grades, clearGrades } = useGrades();
     const containerRef = useRef<HTMLDivElement>(null);
     const tableRef = useRef<HTMLTableElement>(null);
 
     const handleSave = async (
         basename: string,
-        extension: SupportedExtension,
+        extension: SupportedExportExtension,
     ) => {
         const filename = basename + "." + extension;
 
         if (extension === "docx") {
-            const blob = await saveToDocx(history);
+            const blob = await writeToDocx(grades);
             downloadBlob(blob, filename);
             return;
         }
 
         if (extension === "csv") {
-            const blob = saveToCSV(history);
+            const blob = writeToCSV(grades);
             downloadBlob(blob, filename);
             return;
         }
@@ -48,6 +47,7 @@ export default function History() {
 
         const canvas = await html2canvas(tableRef.current, {
             logging: false,
+            backgroundColor: "white",
         });
 
         canvas.toBlob((blob) => downloadBlob(blob, filename));
@@ -56,22 +56,19 @@ export default function History() {
     return (
         <div
             ref={containerRef}
-            className="min-h-[384px] w-full max-w-[calc(16rem+50ch)] flex-grow p-4 font-mono text-sm"
+            className="min-h-[384px] w-full max-w-[calc(16rem+50ch)] flex-1 p-4 font-mono text-sm"
         >
             <div className="flex items-center gap-4 p-4 font-sans">
-                <h2 className="mr-auto text-lg font-medium">History</h2>
-                {history.length > 0 && (
-                    <Button variant="destructive" onClick={clearHistory}>
+                <h2 className="mr-auto text-lg font-medium">Grades</h2>
+                {grades.length > 0 && (
+                    <Button variant="destructive" onClick={clearGrades}>
                         Clear
                     </Button>
                 )}
-                <SaveDialogTrigger onSave={handleSave} />
+                <ExportDialogTrigger onSave={handleSave} />
+                <ImportButton />
             </div>
-            <Table
-                ref={tableRef}
-                id="history"
-                className="w-auto bg-white font-mono"
-            >
+            <Table ref={tableRef} id="grades" className="w-auto font-mono">
                 <TableHeader>
                     <TableRow>
                         <TableHead>Subject</TableHead>
@@ -93,7 +90,7 @@ export default function History() {
                 </TableHeader>
 
                 <TableBody>
-                    {history.map((item, idx) => (
+                    {grades.map((item, idx) => (
                         <TableRow key={idx}>
                             <TableCell className="max-w-[20ch] break-words">
                                 {item.subject}
@@ -130,13 +127,13 @@ export default function History() {
                             </TableCell>
                         </TableRow>
                     ))}
-                    {history.length === 0 && (
+                    {grades.length === 0 && (
                         <TableRow>
                             <TableCell
                                 className="h-36 text-center text-slate-400"
                                 colSpan={8}
                             >
-                                History is empty
+                                Grades is empty
                             </TableCell>
                         </TableRow>
                     )}

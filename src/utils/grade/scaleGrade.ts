@@ -1,4 +1,4 @@
-import roundTwo from "./roundTwo";
+import roundTwo from "../roundTwo";
 
 export default function scaleGrade(gwa: number) {
     gwa = roundTwo(gwa);

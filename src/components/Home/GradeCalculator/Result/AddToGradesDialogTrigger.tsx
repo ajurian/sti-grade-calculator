@@ -12,13 +12,15 @@ import {
 import { Input } from "@/components/ui/input";
 import { useRef, useState } from "react";
 
-interface AddToHistoryDialogProps {
+interface AddToGradesDialogTriggerProps {
+    isDisabled: boolean;
     onAdd: (subject: string) => void;
 }
 
-export default function AddToHistoryDialogTrigger({
+export default function AddToGradesDialogTrigger({
+    isDisabled,
     onAdd,
-}: AddToHistoryDialogProps) {
+}: AddToGradesDialogTriggerProps) {
     const [subject, setSubject] = useState("");
     const addButtonRef = useRef<HTMLButtonElement>(null);
 
@@ -29,13 +31,14 @@ export default function AddToHistoryDialogTrigger({
                     className="mt-2 w-full"
                     variant="outline"
                     onClick={() => setSubject("")}
+                    disabled={isDisabled}
                 >
-                    Add to History
+                    Add to Grades
                 </Button>
             </DialogTrigger>
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle>Add to History</DialogTitle>
+                    <DialogTitle>Add to Grades</DialogTitle>
                     <CardDescription>Enter subject name</CardDescription>
                 </DialogHeader>
                 <div className="flex">

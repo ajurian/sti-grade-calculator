@@ -18,10 +18,9 @@ import {
 } from "@/components/ui/select";
 import { useRef, useState } from "react";
 import { Button } from "../../ui/button";
-import { SupportedExtension } from "./History";
 
-interface SaveDialogProps {
-    onSave: (basename: string, extension: SupportedExtension) => void;
+interface ExportDialogTriggerProps {
+    onSave: (basename: string, extension: SupportedExportExtension) => void;
 }
 
 function generateBasename() {
@@ -35,7 +34,9 @@ function generateBasename() {
     );
 }
 
-export default function SaveDialogTrigger({ onSave }: SaveDialogProps) {
+export default function ExportDialogTrigger({
+    onSave,
+}: ExportDialogTriggerProps) {
     const [basename, setBasename] = useState("");
     const [defaultBasename, setDefaultBasename] = useState("");
     const [extension, setExtension] = useState("png");
@@ -45,12 +46,12 @@ export default function SaveDialogTrigger({ onSave }: SaveDialogProps) {
         <Dialog>
             <DialogTrigger asChild>
                 <Button onClick={() => setDefaultBasename(generateBasename())}>
-                    Download
+                    Export
                 </Button>
             </DialogTrigger>
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle>Download</DialogTitle>
+                    <DialogTitle>Export</DialogTitle>
                     <DialogDescription>
                         Save the table as .{extension} file
                     </DialogDescription>
@@ -85,7 +86,7 @@ export default function SaveDialogTrigger({ onSave }: SaveDialogProps) {
                             onClick={() =>
                                 onSave(
                                     basename || defaultBasename,
-                                    extension as SupportedExtension,
+                                    extension as SupportedExportExtension,
                                 )
                             }
                         >
