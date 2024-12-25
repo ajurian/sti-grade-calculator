@@ -48,7 +48,7 @@ export default function GradeCalculator() {
     };
 
     return (
-        <div className="w-full max-w-[calc(14rem+50ch)] flex-1 border-b p-8 xl:sticky xl:top-0 xl:h-screen xl:border-b-0 xl:border-r">
+        <div className="w-full max-w-[calc(14rem+50ch)] flex-1 border-b p-8 xl:h-screen xl:border-b-0 xl:border-r">
             <h1 className="mb-2 text-xl font-semibold">Grade Calculator</h1>
             <div className="mb-8 text-muted-foreground">Enter your grades</div>
 

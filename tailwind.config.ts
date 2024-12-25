@@ -11,6 +11,9 @@ export default {
     ],
     theme: {
         extend: {
+            boxShadow: {
+                "1px": "0px 1px hsl(var(--border))",
+            },
             screens: {
                 xs: "448px",
                 xl: "1368px",
