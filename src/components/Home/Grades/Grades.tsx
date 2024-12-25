@@ -118,8 +118,8 @@ export default function Grades() {
                     id="grades"
                     className="block max-h-[calc(100vh-7rem)]"
                 >
-                    <TableHeader className="sticky top-0 bg-background shadow-1px">
-                        <TableRow className="!border-b-0">
+                    <TableHeader className="sticky top-0 bg-background shadow-1px [&_tr]:border-b-0">
+                        <TableRow>
                             <TableHead>Subject</TableHead>
                             <TableHead className="box-content min-w-[7ch] text-center">
                                 Prelim
