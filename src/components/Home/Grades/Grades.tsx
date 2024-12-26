@@ -1,3 +1,4 @@
+import { Checkbox } from "@/components/ui/checkbox";
 import {
     Table,
     TableBody,
@@ -6,20 +7,21 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
+import usePrevious from "@/hooks/usePrevious";
 import { useScrollTop } from "@/hooks/useScrollTop";
 import { cn } from "@/lib/utils";
 import downloadBlob from "@/utils/downloadBlob";
 import writeToCSV from "@/utils/readwrite/writeToCSV";
 import writeToDocx from "@/utils/readwrite/writeToDocx";
 import html2canvas from "html2canvas-pro";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Button } from "../../ui/button";
 import { useGrades } from "../GradesProvider";
 import ExportDialogTrigger from "./ExportDialogTrigger";
 import ImportButton from "./ImportButton";
 
 export default function Grades() {
-    const { grades, clearGrades } = useGrades();
+    const { grades, deleteIndices } = useGrades();
     const containerRef = useRef<HTMLDivElement>(null);
     const tableContainerRef = useRef<HTMLDivElement>(null);
     const tableRef = useRef<HTMLTableElement>(null);
@@ -27,7 +29,28 @@ export default function Grades() {
     const tableScrollTop = useScrollTop(tableContainerRef);
     const [isBorderBottomVisible, setIsBorderBottomVisible] = useState(false);
 
-    const handleSave = async (
+    const [checkedRows, setCheckedRows] = useState(() =>
+        Array(grades.length).fill(false),
+    );
+    const isAtleastOneChecked = useMemo(
+        () => checkedRows.some((checked) => checked),
+        [checkedRows],
+    );
+    const areAllChecked = useMemo(
+        () => checkedRows.length > 0 && checkedRows.every((checked) => checked),
+        [checkedRows],
+    );
+
+    const previousGradesLength = usePrevious(grades.length, 0);
+
+    const handleDelete = () => {
+        deleteIndices(checkedRows);
+        setCheckedRows((checkedRows) =>
+            checkedRows.filter((checked) => !checked),
+        );
+    };
+
+    const handleExport = async (
         basename: string,
         extension: SupportedExportExtension,
     ) => {
@@ -54,12 +77,15 @@ export default function Grades() {
         document.body.appendChild(tableClone);
 
         const thead = tableClone.querySelector("thead");
-        const tr = tableClone.querySelector("tr");
+        const tr = tableClone.querySelectorAll("tr");
 
-        if (thead && tr) {
-            thead.style.boxShadow = "none";
-            tr.style.borderBottomWidth = "1px";
+        if (thead === null || tr === null || tr.length === 0) {
+            return;
         }
+
+        thead.style.boxShadow = "none";
+        tr[0].style.borderBottomWidth = "1px";
+        tr.forEach((node) => node.removeChild(node.children[0]));
 
         tableClone.style.position = "absolute";
         tableClone.style.left = "101vw";
@@ -89,21 +115,31 @@ export default function Grades() {
         );
     }, [grades.length, tableScrollTop]);
 
+    useEffect(() => {
+        if (grades.length <= previousGradesLength) {
+            return;
+        }
+
+        setCheckedRows((checkedRows) => [...checkedRows, false]);
+    }, [grades.length, previousGradesLength]);
+
     return (
         <div
             ref={containerRef}
-            className="min-h-[384px] w-full max-w-[calc(16rem+50ch)] flex-1 p-4 font-mono text-sm"
+            className="min-h-[384px] w-full max-w-[calc(19rem+50ch)] flex-1 p-4 font-mono text-sm"
         >
-            <div className="flex items-center gap-4 p-4 font-sans">
-                <h2 className="mr-auto text-lg font-medium">Grades</h2>
-                {grades.length > 0 && (
-                    <Button variant="destructive" onClick={clearGrades}>
-                        Clear
-                    </Button>
-                )}
+            <div className="flex flex-wrap items-center gap-4 p-4 font-sans">
+                <div className="flex h-10 flex-grow basis-full items-center gap-4">
+                    <h2 className="mr-auto text-xl font-medium">Grades</h2>
+                    {isAtleastOneChecked && (
+                        <Button variant="destructive" onClick={handleDelete}>
+                            Delete
+                        </Button>
+                    )}
+                </div>
                 <ExportDialogTrigger
                     isDisabled={grades.length === 0}
-                    onSave={handleSave}
+                    onExport={handleExport}
                 />
                 <ImportButton />
             </div>
@@ -118,10 +154,25 @@ export default function Grades() {
                 <Table
                     ref={tableRef}
                     id="grades"
-                    className="block max-h-[calc(100vh-7rem)]"
+                    className="block max-h-[calc(100vh-10rem-1px)]"
                 >
-                    <TableHeader className="sticky top-0 bg-background shadow-1px [&_tr]:border-b-0">
+                    <TableHeader className="shadow-b-1px sticky top-0 z-20 bg-background [&_tr]:border-b-0">
                         <TableRow>
+                            <TableHead className="shadow-r-1px sticky left-0 w-4 bg-background">
+                                <div className="flex w-fit justify-center pr-4">
+                                    <Checkbox
+                                        disabled={grades.length === 0}
+                                        checked={areAllChecked}
+                                        onClick={() =>
+                                            setCheckedRows(
+                                                Array(grades.length).fill(
+                                                    !areAllChecked,
+                                                ),
+                                            )
+                                        }
+                                    />
+                                </div>
+                            </TableHead>
                             <TableHead>Subject</TableHead>
                             <TableHead className="box-content min-w-[7ch] text-center">
                                 Prelim
@@ -143,6 +194,21 @@ export default function Grades() {
                     <TableBody>
                         {grades.map((item, idx) => (
                             <TableRow key={idx}>
+                                <TableCell className="shadow-r-1px sticky left-0 z-10 bg-background">
+                                    <div className="flex w-fit justify-center">
+                                        <Checkbox
+                                            checked={checkedRows[idx]}
+                                            onCheckedChange={() =>
+                                                setCheckedRows((checkedRows) =>
+                                                    checkedRows.with(
+                                                        idx,
+                                                        !checkedRows[idx],
+                                                    ),
+                                                )
+                                            }
+                                        />
+                                    </div>
+                                </TableCell>
                                 <TableCell className="max-w-[20ch] break-words">
                                     {item.subject}
                                 </TableCell>

@@ -13,7 +13,7 @@ const GradesContext = createContext<GradesContextValue>({
     grades: [],
     loadFromCSV: () => {},
     addToGrades: () => {},
-    clearGrades: () => {},
+    deleteIndices: () => {},
 });
 
 export const useGrades = () => useContext(GradesContext);
@@ -30,11 +30,15 @@ export default function GradesProvider({ children }: PropsWithChildren) {
         setGrades((prevGrades) => [...prevGrades, item]);
     }, []);
 
-    const clearGrades = useCallback(() => setGrades([]), []);
+    const deleteIndices = useCallback(
+        (indices: boolean[]) =>
+            setGrades((grades) => grades.filter((_, idx) => !indices[idx])),
+        [],
+    );
 
     return (
         <GradesContext.Provider
-            value={{ grades, loadFromCSV, addToGrades, clearGrades }}
+            value={{ grades, loadFromCSV, addToGrades, deleteIndices }}
         >
             {children}
         </GradesContext.Provider>

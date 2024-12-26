@@ -31,6 +31,7 @@ export default function ImportButton() {
             <Button
                 variant="secondary"
                 onClick={() => inputRef.current?.click()}
+                className="flex-grow"
             >
                 Import
             </Button>

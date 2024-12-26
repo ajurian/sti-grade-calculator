@@ -21,7 +21,7 @@ import { Button } from "../../ui/button";
 
 interface ExportDialogTriggerProps {
     isDisabled: boolean;
-    onSave: (basename: string, extension: SupportedExportExtension) => void;
+    onExport: (basename: string, extension: SupportedExportExtension) => void;
 }
 
 function generateBasename() {
@@ -37,7 +37,7 @@ function generateBasename() {
 
 export default function ExportDialogTrigger({
     isDisabled,
-    onSave,
+    onExport,
 }: ExportDialogTriggerProps) {
     const [basename, setBasename] = useState("");
     const [defaultBasename, setDefaultBasename] = useState("");
@@ -50,6 +50,7 @@ export default function ExportDialogTrigger({
                 <Button
                     disabled={isDisabled}
                     onClick={() => setDefaultBasename(generateBasename())}
+                    className="flex-grow"
                 >
                     Export
                 </Button>
@@ -58,7 +59,7 @@ export default function ExportDialogTrigger({
                 <DialogHeader>
                     <DialogTitle>Export</DialogTitle>
                     <DialogDescription>
-                        Save the table as .{extension} file
+                        Export the table as .{extension} file
                     </DialogDescription>
                 </DialogHeader>
                 <div className="flex items-center gap-1">
@@ -89,7 +90,7 @@ export default function ExportDialogTrigger({
                         <Button
                             ref={saveButtonRef}
                             onClick={() =>
-                                onSave(
+                                onExport(
                                     basename || defaultBasename,
                                     extension as SupportedExportExtension,
                                 )
