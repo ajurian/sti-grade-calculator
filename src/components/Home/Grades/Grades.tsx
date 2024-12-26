@@ -14,7 +14,7 @@ import downloadBlob from "@/utils/downloadBlob";
 import writeToCSV from "@/utils/readwrite/writeToCSV";
 import writeToDocx from "@/utils/readwrite/writeToDocx";
 import html2canvas from "html2canvas-pro";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { Button } from "../../ui/button";
 import { useGrades } from "../GradesProvider";
 import ExportDialogTrigger from "./ExportDialogTrigger";
@@ -40,6 +40,8 @@ export default function Grades() {
         () => checkedRows.length > 0 && checkedRows.every((checked) => checked),
         [checkedRows],
     );
+
+    const [justImported, setJustImported] = useState(false);
 
     const previousGradesLength = usePrevious(grades.length, 0);
 
@@ -115,13 +117,19 @@ export default function Grades() {
         );
     }, [grades.length, tableScrollTop]);
 
-    useEffect(() => {
+    useLayoutEffect(() => {
+        if (justImported) {
+            setCheckedRows(Array(grades.length).fill(false));
+            setJustImported(false);
+            return;
+        }
+
         if (grades.length <= previousGradesLength) {
             return;
         }
 
         setCheckedRows((checkedRows) => [...checkedRows, false]);
-    }, [grades.length, previousGradesLength]);
+    }, [grades.length, previousGradesLength, justImported]);
 
     return (
         <div
@@ -141,7 +149,7 @@ export default function Grades() {
                     isDisabled={grades.length === 0}
                     onExport={handleExport}
                 />
-                <ImportButton />
+                <ImportButton onImport={() => setJustImported(true)} />
             </div>
 
             <div

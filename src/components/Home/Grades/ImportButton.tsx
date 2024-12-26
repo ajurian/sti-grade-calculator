@@ -2,7 +2,11 @@ import { Button } from "@/components/ui/button";
 import React, { useRef } from "react";
 import { useGrades } from "../GradesProvider";
 
-export default function ImportButton() {
+interface ImportButtonProps {
+    onImport: (grades: GradesItem[]) => void;
+}
+
+export default function ImportButton({ onImport }: ImportButtonProps) {
     const inputRef = useRef<HTMLInputElement>(null);
     const { loadFromCSV } = useGrades();
 
@@ -15,7 +19,11 @@ export default function ImportButton() {
 
         const fr = new FileReader();
 
-        fr.onload = () => loadFromCSV(fr.result as string);
+        fr.onload = () => {
+            const grades = loadFromCSV(fr.result as string);
+            onImport(grades);
+        };
+
         fr.readAsText(file);
     };
 

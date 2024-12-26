@@ -15,7 +15,7 @@ interface GradesItem {
 
 interface GradesContextValue {
     grades: GradesItem[];
-    loadFromCSV: (content: string) => void;
+    loadFromCSV: (content: string) => GradesItem[];
     addToGrades: (item: GradesItem) => void;
     deleteIndices: (checkedIndices: boolean[]) => void;
 }

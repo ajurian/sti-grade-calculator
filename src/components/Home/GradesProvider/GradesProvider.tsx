@@ -11,7 +11,7 @@ import {
 
 const GradesContext = createContext<GradesContextValue>({
     grades: [],
-    loadFromCSV: () => {},
+    loadFromCSV: () => [],
     addToGrades: () => {},
     deleteIndices: () => {},
 });
@@ -21,10 +21,11 @@ export const useGrades = () => useContext(GradesContext);
 export default function GradesProvider({ children }: PropsWithChildren) {
     const [grades, setGrades] = useState<GradesContextValue["grades"]>([]);
 
-    const loadFromCSV = useCallback(
-        (content: string) => setGrades(readFromCSV(content)),
-        [],
-    );
+    const loadFromCSV = useCallback((content: string) => {
+        const grades = readFromCSV(content);
+        setGrades(grades);
+        return grades;
+    }, []);
 
     const addToGrades = useCallback((item: GradesItem) => {
         setGrades((prevGrades) => [...prevGrades, item]);
