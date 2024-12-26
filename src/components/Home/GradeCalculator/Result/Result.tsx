@@ -1,38 +1,22 @@
 import { cn } from "@/lib/utils";
-import scaleGrade from "@/utils/grade/scaleGrade";
-import AddToGradesDialogTrigger from "./AddToGradesDialogTrigger";
 import { useGrades } from "../../GradesProvider";
+import AddToGradesDialogTrigger from "./AddToGradesDialogTrigger";
 
 interface ResultProps {
-    prelim: number;
-    midterm: number;
-    prefinal: number;
-    final: number;
-    gwa: number;
-    status: GradesItem["status"];
-    isCalculated: boolean;
+    calculation: Omit<GradesItem, "subject"> | null;
 }
 
-export default function Result({
-    prelim,
-    midterm,
-    prefinal,
-    final,
-    gwa,
-    status,
-    isCalculated,
-}: ResultProps) {
+export default function Result({ calculation }: ResultProps) {
     const { addToGrades } = useGrades();
 
     const handleAddToGrades = (subject: string) => {
+        if (calculation === null) {
+            return;
+        }
+
         addToGrades({
             subject,
-            prelim,
-            midterm,
-            prefinal,
-            final,
-            gwa,
-            status,
+            ...calculation,
         });
     };
 
@@ -48,31 +32,31 @@ export default function Result({
                     <div>GWA:</div>
                     <div>Status:</div>
                 </div>
-                {isCalculated ? (
+                {calculation !== null ? (
                     <>
                         <div className="min-w-[7ch] text-right">
-                            <div>{prelim.toFixed(2)}%</div>
-                            <div>{midterm.toFixed(2)}%</div>
-                            <div>{prefinal.toFixed(2)}%</div>
-                            <div>{final.toFixed(2)}%</div>
-                            <div>{gwa.toFixed(2)}%</div>
+                            <div>{calculation.prelim.toFixed(2)}%</div>
+                            <div>{calculation.midterm.toFixed(2)}%</div>
+                            <div>{calculation.prefinal.toFixed(2)}%</div>
+                            <div>{calculation.final.toFixed(2)}%</div>
+                            <div>{calculation.gwa.toFixed(2)}%</div>
                             <div
                                 className={cn(
                                     "font-semibold",
-                                    status === "Passed"
+                                    calculation.status === "Passed"
                                         ? "text-green-500"
                                         : "text-red-500",
                                 )}
                             >
-                                {status}
+                                {calculation.status}
                             </div>
                         </div>
                         <div>
-                            <div>({scaleGrade(prelim)})</div>
-                            <div>({scaleGrade(midterm)})</div>
-                            <div>({scaleGrade(prefinal)})</div>
-                            <div>({scaleGrade(final)})</div>
-                            <div>({scaleGrade(gwa)})</div>
+                            <div>({calculation.prelimScale})</div>
+                            <div>({calculation.midtermScale})</div>
+                            <div>({calculation.prefinalScale})</div>
+                            <div>({calculation.finalScale})</div>
+                            <div>({calculation.gwaScale})</div>
                         </div>
                     </>
                 ) : (
@@ -87,7 +71,7 @@ export default function Result({
                 )}
             </div>
             <AddToGradesDialogTrigger
-                isDisabled={!isCalculated}
+                isDisabled={calculation === null}
                 onAdd={handleAddToGrades}
             />
         </div>

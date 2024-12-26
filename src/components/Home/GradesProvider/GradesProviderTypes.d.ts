@@ -5,6 +5,11 @@ interface GradesItem {
     prefinal: number;
     final: number;
     gwa: number;
+    prelimScale: string;
+    midtermScale: string;
+    prefinalScale: string;
+    finalScale: string;
+    gwaScale: string;
     status: "Passed" | "Failed";
 }
 

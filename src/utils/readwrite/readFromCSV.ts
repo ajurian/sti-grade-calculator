@@ -1,3 +1,5 @@
+import calculateGrades from "../grade/calculateGrades";
+
 export default function readFromCSV(content: string) {
     const grades: GradesItem[] = [];
     const rows = content.split("\n");
@@ -10,16 +12,16 @@ export default function readFromCSV(content: string) {
             break;
         }
 
-        console.log(columns);
+        const calculation = calculateGrades({
+            prelimRaw: columns[1].split("%")[0],
+            midtermRaw: columns[2].split("%")[0],
+            prefinalRaw: columns[3].split("%")[0],
+            finalRaw: columns[4].split("%")[0],
+        });
 
         grades.push({
             subject: columns[0],
-            prelim: Number(columns[1]),
-            midterm: Number(columns[2]),
-            prefinal: Number(columns[3]),
-            final: Number(columns[4]),
-            gwa: Number(columns[5]),
-            status: columns[6] as GradesItem["status"],
+            ...calculation,
         });
     }
 

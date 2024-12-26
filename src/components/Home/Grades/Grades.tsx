@@ -6,9 +6,9 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
+import { useScrollTop } from "@/hooks/useScrollTop";
 import { cn } from "@/lib/utils";
 import downloadBlob from "@/utils/downloadBlob";
-import scaleGrade from "@/utils/grade/scaleGrade";
 import writeToCSV from "@/utils/readwrite/writeToCSV";
 import writeToDocx from "@/utils/readwrite/writeToDocx";
 import html2canvas from "html2canvas-pro";
@@ -17,7 +17,6 @@ import { Button } from "../../ui/button";
 import { useGrades } from "../GradesProvider";
 import ExportDialogTrigger from "./ExportDialogTrigger";
 import ImportButton from "./ImportButton";
-import { useScrollTop } from "@/hooks/useScrollTop";
 
 export default function Grades() {
     const { grades, clearGrades } = useGrades();
@@ -102,7 +101,10 @@ export default function Grades() {
                         Clear
                     </Button>
                 )}
-                <ExportDialogTrigger onSave={handleSave} />
+                <ExportDialogTrigger
+                    isDisabled={grades.length === 0}
+                    onSave={handleSave}
+                />
                 <ImportButton />
             </div>
 
@@ -146,23 +148,23 @@ export default function Grades() {
                                 </TableCell>
                                 <TableCell className="text-right">
                                     {item.prelim.toFixed(2)}%
-                                    <br />({scaleGrade(item.prelim)})
+                                    <br />({item.prelimScale})
                                 </TableCell>
                                 <TableCell className="text-right">
                                     {item.midterm.toFixed(2)}%
-                                    <br />({scaleGrade(item.midterm)})
+                                    <br />({item.midtermScale})
                                 </TableCell>
                                 <TableCell className="text-right">
                                     {item.prefinal.toFixed(2)}%
-                                    <br />({scaleGrade(item.prefinal)})
+                                    <br />({item.prefinalScale})
                                 </TableCell>
                                 <TableCell className="text-right">
                                     {item.final.toFixed(2)}%
-                                    <br />({scaleGrade(item.final)})
+                                    <br />({item.finalScale})
                                 </TableCell>
                                 <TableCell className="text-right">
                                     {item.gwa.toFixed(2)}%
-                                    <br />({scaleGrade(item.gwa)})
+                                    <br />({item.gwaScale})
                                 </TableCell>
                                 <TableCell
                                     className={cn(

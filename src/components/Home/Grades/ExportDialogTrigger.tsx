@@ -20,6 +20,7 @@ import { useRef, useState } from "react";
 import { Button } from "../../ui/button";
 
 interface ExportDialogTriggerProps {
+    isDisabled: boolean;
     onSave: (basename: string, extension: SupportedExportExtension) => void;
 }
 
@@ -35,6 +36,7 @@ function generateBasename() {
 }
 
 export default function ExportDialogTrigger({
+    isDisabled,
     onSave,
 }: ExportDialogTriggerProps) {
     const [basename, setBasename] = useState("");
@@ -45,7 +47,10 @@ export default function ExportDialogTrigger({
     return (
         <Dialog>
             <DialogTrigger asChild>
-                <Button onClick={() => setDefaultBasename(generateBasename())}>
+                <Button
+                    disabled={isDisabled}
+                    onClick={() => setDefaultBasename(generateBasename())}
+                >
                     Export
                 </Button>
             </DialogTrigger>

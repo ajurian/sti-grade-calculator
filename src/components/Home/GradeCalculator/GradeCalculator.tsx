@@ -1,9 +1,7 @@
 import GradeField from "@/components/Home/GradeCalculator/GradeField";
 import GradingSystem from "@/components/Home/GradeCalculator/GradingSystem";
 import { Button } from "@/components/ui/button";
-import computeGWA from "@/utils/grade/computeGWA";
-import scaleGrade from "@/utils/grade/scaleGrade";
-import roundTwo from "@/utils/roundTwo";
+import calculateGrades from "@/utils/grade/calculateGrades";
 import { useState } from "react";
 import Result from "./Result";
 
@@ -12,31 +10,21 @@ export default function GradeCalculator() {
     const [midtermInput, setMidtermInput] = useState("");
     const [prefinalInput, setPrefinalInput] = useState("");
     const [finalInput, setFinalInput] = useState("");
-    const [isCalculated, setIsCalculated] = useState(false);
 
-    const [prelim, setPrelim] = useState(0);
-    const [midterm, setMidterm] = useState(0);
-    const [prefinal, setPrefinal] = useState(0);
-    const [final, setFinal] = useState(0);
-    const [gwa, setGWA] = useState(0);
-    const [status, setStatus] = useState<GradesItem["status"]>("Failed");
+    const [calculation, setCalculation] = useState<Omit<
+        GradesItem,
+        "subject"
+    > | null>(null);
 
     const handleCalculate = () => {
-        const prelim = roundTwo(Number(prelimInput));
-        const midterm = roundTwo(Number(midtermInput));
-        const prefinal = roundTwo(Number(prefinalInput));
-        const final = roundTwo(Number(finalInput));
-        const gwa = computeGWA(prelim, midterm, prefinal, final);
-        const gwaScale = scaleGrade(gwa);
-        const status = gwaScale === "5.00" ? "Failed" : "Passed";
+        const calculation = calculateGrades({
+            prelimRaw: prelimInput,
+            midtermRaw: midtermInput,
+            prefinalRaw: prefinalInput,
+            finalRaw: finalInput,
+        });
 
-        setPrelim(prelim);
-        setMidterm(midterm);
-        setPrefinal(prefinal);
-        setFinal(final);
-        setGWA(gwa);
-        setStatus(status);
-        setIsCalculated(true);
+        setCalculation(calculation);
     };
 
     const handleReset = () => {
@@ -44,7 +32,7 @@ export default function GradeCalculator() {
         setMidtermInput("");
         setPrefinalInput("");
         setFinalInput("");
-        setIsCalculated(false);
+        setCalculation(null);
     };
 
     return (
@@ -98,15 +86,7 @@ export default function GradeCalculator() {
             </div>
 
             <div className="mt-8 flex flex-wrap gap-8">
-                <Result
-                    prelim={prelim}
-                    midterm={midterm}
-                    prefinal={prefinal}
-                    final={final}
-                    gwa={gwa}
-                    status={status}
-                    isCalculated={isCalculated}
-                />
+                <Result calculation={calculation} />
                 <GradingSystem />
             </div>
         </div>
