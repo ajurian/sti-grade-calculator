@@ -34,7 +34,7 @@ export default function GradesTable({
         >
             <TableHeader className="sticky top-0 z-20 bg-background">
                 <TableRow>
-                    <TableHead className="sticky left-0 w-4 bg-background">
+                    <TableHead className="sticky left-0 z-10 w-4 bg-background">
                         <div className="flex w-fit justify-center pr-4">
                             <Checkbox
                                 disabled={rows.length === 0}
