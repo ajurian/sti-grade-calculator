@@ -1,12 +1,3 @@
-import { Checkbox } from "@/components/ui/checkbox";
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from "@/components/ui/table";
 import usePrevious from "@/hooks/usePrevious";
 import { useScrollTop } from "@/hooks/useScrollTop";
 import { cn } from "@/lib/utils";
@@ -18,6 +9,7 @@ import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { Button } from "../../ui/button";
 import { useGrades } from "../GradesProvider";
 import ExportDialogTrigger from "./ExportDialogTrigger";
+import GradesTable from "./GradesTable";
 import ImportButton from "./ImportButton";
 
 export default function Grades() {
@@ -29,15 +21,11 @@ export default function Grades() {
     const tableScrollTop = useScrollTop(tableContainerRef);
     const [isBorderBottomVisible, setIsBorderBottomVisible] = useState(false);
 
-    const [checkedRows, setCheckedRows] = useState(() =>
+    const [checkedRows, setCheckedRows] = useState<boolean[]>(() =>
         Array(grades.length).fill(false),
     );
-    const isAtleastOneChecked = useMemo(
-        () => checkedRows.some((checked) => checked),
-        [checkedRows],
-    );
-    const areAllChecked = useMemo(
-        () => checkedRows.length > 0 && checkedRows.every((checked) => checked),
+    const checkedCount = useMemo(
+        () => checkedRows.filter((checked) => checked).length,
         [checkedRows],
     );
 
@@ -74,20 +62,40 @@ export default function Grades() {
             return;
         }
 
+        const tableParent = tableRef.current.parentElement;
         const tableClone = tableRef.current.cloneNode(true) as HTMLTableElement;
 
-        document.body.appendChild(tableClone);
+        tableParent?.appendChild(tableClone);
 
         const thead = tableClone.querySelector("thead");
         const tr = tableClone.querySelectorAll("tr");
+        const textarea = tableClone.querySelectorAll("textarea");
+        const textareaValue =
+            tableClone.querySelectorAll<HTMLDivElement>(".textarea-value");
+        const subjectResizable =
+            tableClone.querySelector<HTMLSpanElement>("#subject-resizable");
 
-        if (thead === null || tr === null || tr.length === 0) {
+        if (
+            thead === null ||
+            tr === null ||
+            tr.length === 0 ||
+            textarea.length === 0 ||
+            subjectResizable === null
+        ) {
             return;
         }
 
         thead.style.boxShadow = "none";
         tr[0].style.borderBottomWidth = "1px";
         tr.forEach((node) => node.removeChild(node.children[0]));
+        textarea.forEach((node) => (node.style.display = "none"));
+        textareaValue.forEach((node) => {
+            node.style.display = "block";
+            node.style.visibility = "visible";
+        });
+
+        subjectResizable.classList.remove("after:content-['|']");
+        subjectResizable.classList.add("after:content-['']");
 
         tableClone.style.position = "absolute";
         tableClone.style.left = "101vw";
@@ -99,7 +107,7 @@ export default function Grades() {
             backgroundColor: "white",
         });
 
-        document.body.removeChild(tableClone);
+        tableParent?.removeChild(tableClone);
 
         canvas.toBlob((blob) => downloadBlob(blob, filename));
     };
@@ -134,14 +142,14 @@ export default function Grades() {
     return (
         <div
             ref={containerRef}
-            className="min-h-[384px] w-full max-w-[calc(19rem+50ch)] flex-1 p-4 font-mono text-sm"
+            className="min-h-[384px] w-full max-w-[calc(19rem+52ch+7px)] flex-1 p-4 font-mono text-sm"
         >
             <div className="flex flex-wrap items-center gap-4 p-4 font-sans">
                 <div className="flex h-10 flex-grow basis-full items-center gap-4">
                     <h2 className="mr-auto text-xl font-medium">Grades</h2>
-                    {isAtleastOneChecked && (
+                    {checkedCount > 0 && (
                         <Button variant="destructive" onClick={handleDelete}>
-                            Delete
+                            Delete ({checkedCount})
                         </Button>
                     )}
                 </div>
@@ -154,116 +162,19 @@ export default function Grades() {
 
             <div
                 ref={tableContainerRef}
+                tabIndex={-1}
                 className={cn(
                     "relative w-full overflow-auto",
                     isBorderBottomVisible && "border-b",
                 )}
             >
-                <Table
+                <GradesTable
+                    rows={grades}
+                    checkedRows={checkedRows}
+                    checkedCount={checkedCount}
+                    onCheckedChange={setCheckedRows}
                     ref={tableRef}
-                    id="grades"
-                    className="block max-h-[calc(100vh-10rem-1px)]"
-                >
-                    <TableHeader className="shadow-b-1px sticky top-0 z-20 bg-background [&_tr]:border-b-0">
-                        <TableRow>
-                            <TableHead className="shadow-r-1px sticky left-0 w-4 bg-background">
-                                <div className="flex w-fit justify-center pr-4">
-                                    <Checkbox
-                                        disabled={grades.length === 0}
-                                        checked={areAllChecked}
-                                        onClick={() =>
-                                            setCheckedRows(
-                                                Array(grades.length).fill(
-                                                    !areAllChecked,
-                                                ),
-                                            )
-                                        }
-                                    />
-                                </div>
-                            </TableHead>
-                            <TableHead>Subject</TableHead>
-                            <TableHead className="box-content min-w-[7ch] text-center">
-                                Prelim
-                            </TableHead>
-                            <TableHead>Midterm</TableHead>
-                            <TableHead className="whitespace-nowrap">
-                                Pre-final
-                            </TableHead>
-                            <TableHead className="box-content min-w-[7ch] text-center">
-                                Final
-                            </TableHead>
-                            <TableHead className="box-content min-w-[7ch] text-center">
-                                GWA
-                            </TableHead>
-                            <TableHead>Status</TableHead>
-                        </TableRow>
-                    </TableHeader>
-
-                    <TableBody>
-                        {grades.map((item, idx) => (
-                            <TableRow key={idx}>
-                                <TableCell className="shadow-r-1px sticky left-0 z-10 bg-background">
-                                    <div className="flex w-fit justify-center">
-                                        <Checkbox
-                                            checked={checkedRows[idx]}
-                                            onCheckedChange={() =>
-                                                setCheckedRows((checkedRows) =>
-                                                    checkedRows.with(
-                                                        idx,
-                                                        !checkedRows[idx],
-                                                    ),
-                                                )
-                                            }
-                                        />
-                                    </div>
-                                </TableCell>
-                                <TableCell className="max-w-[20ch] break-words">
-                                    {item.subject}
-                                </TableCell>
-                                <TableCell className="text-right">
-                                    {item.prelim.toFixed(2)}%
-                                    <br />({item.prelimScale})
-                                </TableCell>
-                                <TableCell className="text-right">
-                                    {item.midterm.toFixed(2)}%
-                                    <br />({item.midtermScale})
-                                </TableCell>
-                                <TableCell className="text-right">
-                                    {item.prefinal.toFixed(2)}%
-                                    <br />({item.prefinalScale})
-                                </TableCell>
-                                <TableCell className="text-right">
-                                    {item.final.toFixed(2)}%
-                                    <br />({item.finalScale})
-                                </TableCell>
-                                <TableCell className="text-right">
-                                    {item.gwa.toFixed(2)}%
-                                    <br />({item.gwaScale})
-                                </TableCell>
-                                <TableCell
-                                    className={cn(
-                                        "whitespace-nowrap text-center font-semibold",
-                                        item.status === "Passed"
-                                            ? "text-green-500"
-                                            : "text-red-500",
-                                    )}
-                                >
-                                    {item.status}
-                                </TableCell>
-                            </TableRow>
-                        ))}
-                        {grades.length === 0 && (
-                            <TableRow>
-                                <TableCell
-                                    className="h-36 text-center text-slate-400"
-                                    colSpan={8}
-                                >
-                                    Grades is empty
-                                </TableCell>
-                            </TableRow>
-                        )}
-                    </TableBody>
-                </Table>
+                />
             </div>
         </div>
     );

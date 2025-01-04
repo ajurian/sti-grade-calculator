@@ -13,10 +13,10 @@ export default function readFromCSV(content: string) {
         }
 
         const calculation = calculateGrades({
-            prelimRaw: columns[1].split("%")[0],
-            midtermRaw: columns[2].split("%")[0],
-            prefinalRaw: columns[3].split("%")[0],
-            finalRaw: columns[4].split("%")[0],
+            prelimsRaw: columns[1].split("%")[0],
+            midtermsRaw: columns[2].split("%")[0],
+            prefinalsRaw: columns[3].split("%")[0],
+            finalsRaw: columns[4].split("%")[0],
         });
 
         grades.push({

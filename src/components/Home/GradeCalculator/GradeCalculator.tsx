@@ -18,10 +18,10 @@ export default function GradeCalculator() {
 
     const handleCalculate = () => {
         const calculation = calculateGrades({
-            prelimRaw: prelimInput,
-            midtermRaw: midtermInput,
-            prefinalRaw: prefinalInput,
-            finalRaw: finalInput,
+            prelimsRaw: prelimInput,
+            midtermsRaw: midtermInput,
+            prefinalsRaw: prefinalInput,
+            finalsRaw: finalInput,
         });
 
         setCalculation(calculation);
@@ -43,25 +43,25 @@ export default function GradeCalculator() {
             <div className="grid gap-4 xs:grid-cols-2 xs:grid-rows-2">
                 <GradeField
                     id="prelim"
-                    label="Prelim Grade"
+                    label="Prelims"
                     value={prelimInput}
                     onValueChange={setPrelimInput}
                 />
                 <GradeField
                     id="midterm"
-                    label="Midterm Grade"
+                    label="Midterms"
                     value={midtermInput}
                     onValueChange={setMidtermInput}
                 />
                 <GradeField
                     id="pre-final"
-                    label="Pre-final Grade"
+                    label="Pre-finals"
                     value={prefinalInput}
                     onValueChange={setPrefinalInput}
                 />
                 <GradeField
                     id="final"
-                    label="Final Grade"
+                    label="Finals"
                     value={finalInput}
                     onValueChange={setFinalInput}
                 />

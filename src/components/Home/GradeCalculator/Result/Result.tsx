@@ -25,21 +25,21 @@ export default function Result({ calculation }: ResultProps) {
             <h2 className="mb-1 text-lg font-semibold">Result</h2>
             <div className="flex gap-[1ch] font-mono text-muted-foreground">
                 <div>
-                    <div>Prelim:</div>
-                    <div>Midterm:</div>
-                    <div className="whitespace-nowrap">Pre-final:</div>
-                    <div>Final:</div>
-                    <div>GWA:</div>
+                    <div>Prelims:</div>
+                    <div>Midterms:</div>
+                    <div>Pre-finals:</div>
+                    <div>Finals:</div>
+                    <div>Final Grade:</div>
                     <div>Status:</div>
                 </div>
                 {calculation !== null ? (
                     <>
                         <div className="min-w-[7ch] text-right">
-                            <div>{calculation.prelim.toFixed(2)}%</div>
-                            <div>{calculation.midterm.toFixed(2)}%</div>
-                            <div>{calculation.prefinal.toFixed(2)}%</div>
-                            <div>{calculation.final.toFixed(2)}%</div>
-                            <div>{calculation.gwa.toFixed(2)}%</div>
+                            <div>{calculation.prelims.toFixed(2)}%</div>
+                            <div>{calculation.midterms.toFixed(2)}%</div>
+                            <div>{calculation.prefinals.toFixed(2)}%</div>
+                            <div>{calculation.finals.toFixed(2)}%</div>
+                            <div>{calculation.finalGrade.toFixed(2)}%</div>
                             <div
                                 className={cn(
                                     "font-semibold",
@@ -52,11 +52,11 @@ export default function Result({ calculation }: ResultProps) {
                             </div>
                         </div>
                         <div>
-                            <div>({calculation.prelimScale})</div>
-                            <div>({calculation.midtermScale})</div>
-                            <div>({calculation.prefinalScale})</div>
-                            <div>({calculation.finalScale})</div>
-                            <div>({calculation.gwaScale})</div>
+                            <div>({calculation.prelimsScale})</div>
+                            <div>({calculation.midtermsScale})</div>
+                            <div>({calculation.prefinalsScale})</div>
+                            <div>({calculation.finalsScale})</div>
+                            <div>({calculation.finalGradeScale})</div>
                         </div>
                     </>
                 ) : (

@@ -1,15 +1,15 @@
 interface GradesItem {
     subject: string;
-    prelim: number;
-    midterm: number;
-    prefinal: number;
-    final: number;
-    gwa: number;
-    prelimScale: string;
-    midtermScale: string;
-    prefinalScale: string;
-    finalScale: string;
-    gwaScale: string;
+    prelims: number;
+    midterms: number;
+    prefinals: number;
+    finals: number;
+    finalGrade: number;
+    prelimsScale: string;
+    midtermsScale: string;
+    prefinalsScale: string;
+    finalsScale: string;
+    finalGradeScale: string;
     status: "Passed" | "Failed";
 }
 

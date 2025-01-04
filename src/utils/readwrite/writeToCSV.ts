@@ -2,14 +2,22 @@ import { stringify } from "csv-stringify/sync";
 
 export default function writeToCSV(grades: GradesItem[]) {
     const content = stringify([
-        ["Subject", "Prelim", "Midterm", "Pre-final", "Final", "GWA", "Status"],
+        [
+            "Subject",
+            "Prelims",
+            "Midterms",
+            "Pre-finals",
+            "Finals",
+            "Final Grade",
+            "Status",
+        ],
         ...grades.map((item) => [
             item.subject,
-            item.prelim.toFixed(2) + "% (" + item.prelimScale + ")",
-            item.midterm.toFixed(2) + "% (" + item.midtermScale + ")",
-            item.prefinal.toFixed(2) + "% (" + item.prefinalScale + ")",
-            item.final.toFixed(2) + "% (" + item.finalScale + ")",
-            item.gwa.toFixed(2) + "% (" + item.gwaScale + ")",
+            item.prelims.toFixed(2) + "% (" + item.prelimsScale + ")",
+            item.midterms.toFixed(2) + "% (" + item.midtermsScale + ")",
+            item.prefinals.toFixed(2) + "% (" + item.prefinalsScale + ")",
+            item.finals.toFixed(2) + "% (" + item.finalsScale + ")",
+            item.finalGrade.toFixed(2) + "% (" + item.finalGradeScale + ")",
             item.status,
         ]),
     ]);

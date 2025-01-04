@@ -18,11 +18,11 @@ export default async function writeToDocx(grades: GradesItem[]) {
             new TableRow({
                 children: [
                     "Subject",
-                    "Prelim",
-                    "Midterm",
-                    "Pre-final",
-                    "Final",
-                    "GWA",
+                    "Prelims",
+                    "Midterms",
+                    "Pre-finals",
+                    "Finals",
+                    "Final Grade",
                     "Status",
                 ].map(
                     (label) =>
@@ -36,11 +36,11 @@ export default async function writeToDocx(grades: GradesItem[]) {
                     new TableRow({
                         children: [
                             item.subject,
-                            item.prelim.toFixed(2) + "%",
-                            item.midterm.toFixed(2) + "%",
-                            item.prefinal.toFixed(2) + "%",
-                            item.final.toFixed(2) + "%",
-                            item.gwa.toFixed(2) + "%",
+                            item.prelims.toFixed(2) + "%",
+                            item.midterms.toFixed(2) + "%",
+                            item.prefinals.toFixed(2) + "%",
+                            item.finals.toFixed(2) + "%",
+                            item.finalGrade.toFixed(2) + "%",
                             item.status,
                         ].map(
                             (label) =>
