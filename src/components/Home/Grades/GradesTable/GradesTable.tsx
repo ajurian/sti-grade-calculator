@@ -79,6 +79,7 @@ export default function GradesTable({
                 {rows.map((item, idx) => (
                     <GradeRow
                         key={idx}
+                        index={idx}
                         isChecked={checkedRows[idx]}
                         onCheckedChange={() =>
                             onCheckedChange((checkedRows) =>

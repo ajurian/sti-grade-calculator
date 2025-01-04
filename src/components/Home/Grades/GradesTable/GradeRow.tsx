@@ -4,8 +4,13 @@ import { cn } from "@/lib/utils";
 import { ChangeEvent, useRef, useState } from "react";
 
 interface GradeRowProps extends GradesItem {
+    index: number;
     isChecked: boolean;
     onCheckedChange: () => void;
+}
+
+function generateDefaultName(index: number) {
+    return `Subj ${index + 1}`;
 }
 
 export default function GradeRow(props: GradeRowProps) {
@@ -44,7 +49,7 @@ export default function GradeRow(props: GradeRowProps) {
             <TableCell className="max-w-[7ch] break-words">
                 <textarea
                     ref={textareaRef}
-                    placeholder="-------"
+                    placeholder={generateDefaultName(props.index)}
                     rows={1}
                     value={subject}
                     onChange={handleSubjectChange}
@@ -56,7 +61,9 @@ export default function GradeRow(props: GradeRowProps) {
                     ref={textareaValueRef}
                     className="textarea-value invisible hidden"
                 >
-                    {props.subject}
+                    {subject.length === 0
+                        ? generateDefaultName(props.index)
+                        : subject}
                 </div>
             </TableCell>
             <TableCell className="text-right">
