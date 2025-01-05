@@ -1,16 +1,13 @@
 import { Checkbox } from "@/components/ui/checkbox";
 import { TableCell, TableRow } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
-import { ChangeEvent, useRef, useState } from "react";
+import getDefaultSubjectName from "@/utils/getDefaultSubjectName";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 
 interface GradeRowProps extends GradesItem {
     index: number;
     isChecked: boolean;
     onCheckedChange: () => void;
-}
-
-function generateDefaultName(index: number) {
-    return `Subj ${index + 1}`;
 }
 
 export default function GradeRow(props: GradeRowProps) {
@@ -36,6 +33,10 @@ export default function GradeRow(props: GradeRowProps) {
         element.style.height = element.scrollHeight + "px";
     };
 
+    useEffect(() => {
+        setSubject(props.subject);
+    }, [props.subject]);
+
     return (
         <TableRow>
             <TableCell className="sticky left-0 z-10 bg-background">
@@ -49,7 +50,7 @@ export default function GradeRow(props: GradeRowProps) {
             <TableCell className="max-w-[7ch] break-words">
                 <textarea
                     ref={textareaRef}
-                    placeholder={generateDefaultName(props.index)}
+                    placeholder={getDefaultSubjectName(props.index)}
                     rows={1}
                     value={subject}
                     onChange={handleSubjectChange}
@@ -62,7 +63,7 @@ export default function GradeRow(props: GradeRowProps) {
                     className="textarea-value invisible hidden"
                 >
                     {subject.length === 0
-                        ? generateDefaultName(props.index)
+                        ? getDefaultSubjectName(props.index)
                         : subject}
                 </div>
             </TableCell>

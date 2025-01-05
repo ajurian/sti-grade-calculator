@@ -10,7 +10,9 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import getDefaultSubjectName from "@/utils/getDefaultSubjectName";
 import { useRef, useState } from "react";
+import { useGrades } from "../../GradesProvider";
 
 interface AddToGradesDialogTriggerProps {
     isDisabled: boolean;
@@ -23,6 +25,7 @@ export default function AddToGradesDialogTrigger({
 }: AddToGradesDialogTriggerProps) {
     const [subject, setSubject] = useState("");
     const addButtonRef = useRef<HTMLButtonElement>(null);
+    const { grades } = useGrades();
 
     return (
         <Dialog>
@@ -43,7 +46,7 @@ export default function AddToGradesDialogTrigger({
                 </DialogHeader>
                 <div className="flex">
                     <Input
-                        placeholder="Subject"
+                        placeholder={getDefaultSubjectName(grades.length)}
                         value={subject}
                         onChange={(e) => setSubject(e.currentTarget.value)}
                         onKeyDown={(e) =>
@@ -58,7 +61,6 @@ export default function AddToGradesDialogTrigger({
                     <DialogClose asChild>
                         <Button
                             ref={addButtonRef}
-                            disabled={subject.length === 0}
                             onClick={() => onAdd(subject)}
                         >
                             Add
