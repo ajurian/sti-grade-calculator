@@ -45,32 +45,40 @@ export default function Grades() {
         extension: SupportedExportExtension,
     ) => {
         const filename = basename + "." + extension;
+        const table = tableRef.current;
 
-        if (extension === "docx") {
-            const blob = await writeToDocx(grades);
+        if (table === null) {
+            return;
+        }
+
+        const textareaValue =
+            table.querySelectorAll<HTMLDivElement>(".textarea-value");
+
+        if (extension === "docx" || extension === "csv") {
+            const clonedGrades = [...grades];
+
+            clonedGrades.forEach(
+                (grade, idx) => (grade.subject = textareaValue[idx].innerText),
+            );
+
+            const writeFunction =
+                extension === "docx" ? writeToDocx : writeToCSV;
+            const blob = await writeFunction(clonedGrades);
+
             downloadBlob(blob, filename);
+
             return;
         }
 
-        if (extension === "csv") {
-            const blob = writeToCSV(grades);
-            downloadBlob(blob, filename);
-            return;
-        }
-
-        if (tableRef.current === null) {
-            return;
-        }
-
-        const tableParent = tableRef.current.parentElement;
-        const tableClone = tableRef.current.cloneNode(true) as HTMLTableElement;
+        const tableParent = table.parentElement;
+        const tableClone = table.cloneNode(true) as HTMLTableElement;
 
         tableParent?.appendChild(tableClone);
 
         const thead = tableClone.querySelector("thead");
         const tr = tableClone.querySelectorAll("tr");
         const textarea = tableClone.querySelectorAll("textarea");
-        const textareaValue =
+        const clonedTextareaValue =
             tableClone.querySelectorAll<HTMLDivElement>(".textarea-value");
         const subjectResizable =
             tableClone.querySelector<HTMLSpanElement>("#subject-resizable");
@@ -89,7 +97,7 @@ export default function Grades() {
         tr[0].style.borderBottomWidth = "1px";
         tr.forEach((node) => node.removeChild(node.children[0]));
         textarea.forEach((node) => (node.style.display = "none"));
-        textareaValue.forEach((node) => {
+        clonedTextareaValue.forEach((node) => {
             node.style.display = "block";
             node.style.visibility = "visible";
         });
