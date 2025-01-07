@@ -15,13 +15,14 @@ export default function GradesImportButton({
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.currentTarget.files?.[0];
 
-        if (!file || (file.type !== "text/csv" && file.type !== "text/txt")) {
+        if (!file || (file.type !== "text/csv" && file.type !== "text/plain")) {
             return;
         }
 
         const fr = new FileReader();
 
         fr.onload = () => {
+            console.log(fr.result);
             const grades = loadFromCSV(fr.result as string);
             onImport(grades);
         };
