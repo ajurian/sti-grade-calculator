@@ -1,0 +1,4 @@
+User-Agent: *
+Allow: /
+
+Sitemap: https://sti-grade-calculator.vercel.app/sitemap.xml
