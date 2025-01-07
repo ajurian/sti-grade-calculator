@@ -2,39 +2,44 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { TableCell, TableRow } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
 import getDefaultSubjectName from "@/utils/getDefaultSubjectName";
-import { ChangeEvent, useEffect, useRef, useState } from "react";
+import { ChangeEvent, KeyboardEvent, useEffect, useRef, useState } from "react";
 
-interface GradeRowProps extends GradesItem {
+interface DataTableRowProps extends GradeItem {
     index: number;
     isChecked: boolean;
     onCheckedChange: () => void;
 }
 
-export default function GradeRow(props: GradeRowProps) {
-    const [subject, setSubject] = useState(props.subject);
+export default function DataTableRow(props: DataTableRowProps) {
+    const [subjectInput, setSubjectInput] = useState(props.subject);
     const textareaRef = useRef<HTMLTextAreaElement>(null);
     const textareaValueRef = useRef<HTMLDivElement>(null);
 
-    const handleSubjectChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
-        setSubject(e.currentTarget.value);
+    const handleSubjectInputChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
+        setSubjectInput(e.currentTarget.value);
 
         if (textareaValueRef.current) {
             textareaValueRef.current.innerText = e.currentTarget.value;
         }
     };
 
-    const handleSubjectInput = () => {
+    const handleSubjectInputKeyDown = (
+        e: KeyboardEvent<HTMLTextAreaElement>,
+    ) => {
+        if (e.key !== "Enter") return;
+        e.preventDefault();
+    };
+
+    const autoResizeSubjectInput = () => {
         const element = textareaRef.current;
-        if (element === null) {
-            return;
-        }
+        if (element === null) return;
 
         element.style.height = "auto";
         element.style.height = element.scrollHeight + "px";
     };
 
     useEffect(() => {
-        setSubject(props.subject);
+        setSubjectInput(props.subject);
     }, [props.subject]);
 
     return (
@@ -52,19 +57,19 @@ export default function GradeRow(props: GradeRowProps) {
                     ref={textareaRef}
                     placeholder={getDefaultSubjectName(props.index)}
                     rows={1}
-                    value={subject}
-                    onChange={handleSubjectChange}
-                    onInput={handleSubjectInput}
-                    onKeyDown={(e) => e.key === "Enter" && e.preventDefault()}
+                    value={subjectInput}
+                    onChange={handleSubjectInputChange}
+                    onKeyDown={handleSubjectInputKeyDown}
+                    onInput={autoResizeSubjectInput}
                     className="w-full resize-none overflow-hidden bg-transparent focus:outline-none"
                 />
                 <div
                     ref={textareaValueRef}
                     className="textarea-value invisible hidden"
                 >
-                    {subject.length === 0
+                    {subjectInput.length === 0
                         ? getDefaultSubjectName(props.index)
-                        : subject}
+                        : subjectInput}
                 </div>
             </TableCell>
             <TableCell className="text-right">

@@ -1,4 +1,4 @@
-export default function GradingSystem() {
+export default function GradeCalculatorGradingSystem() {
     return (
         <div>
             <h2 className="mb-1 text-lg font-semibold">Grading System</h2>

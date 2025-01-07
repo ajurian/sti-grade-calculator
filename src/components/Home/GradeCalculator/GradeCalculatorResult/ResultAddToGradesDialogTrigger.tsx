@@ -11,21 +11,34 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import getDefaultSubjectName from "@/utils/getDefaultSubjectName";
-import { useRef, useState } from "react";
+import { ChangeEvent, KeyboardEvent, useRef, useState } from "react";
 import { useGrades } from "../../GradesProvider";
 
-interface AddToGradesDialogTriggerProps {
+interface ResultAddToGradesDialogTriggerProps {
     isDisabled: boolean;
     onAdd: (subject: string) => void;
 }
 
-export default function AddToGradesDialogTrigger({
+export default function ResultAddToGradesDialogTrigger({
     isDisabled,
     onAdd,
-}: AddToGradesDialogTriggerProps) {
-    const [subject, setSubject] = useState("");
+}: ResultAddToGradesDialogTriggerProps) {
+    const [subjectInput, setSubjectInput] = useState("");
     const addButtonRef = useRef<HTMLButtonElement>(null);
+
     const { grades } = useGrades();
+
+    const handleAddToGrades = () => setSubjectInput("");
+
+    const handleSubjectInputChange = (e: ChangeEvent<HTMLInputElement>) =>
+        setSubjectInput(e.currentTarget.value);
+
+    const handleSubjectInputKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+        if (e.key !== "Enter") return;
+        addButtonRef.current?.click();
+    };
+
+    const handleAdd = () => onAdd(subjectInput);
 
     return (
         <Dialog>
@@ -33,7 +46,7 @@ export default function AddToGradesDialogTrigger({
                 <Button
                     className="mt-2 w-full"
                     variant="outline"
-                    onClick={() => setSubject("")}
+                    onClick={handleAddToGrades}
                     disabled={isDisabled}
                 >
                     Add to Grades
@@ -47,11 +60,9 @@ export default function AddToGradesDialogTrigger({
                 <div className="flex">
                     <Input
                         placeholder={getDefaultSubjectName(grades.length)}
-                        value={subject}
-                        onChange={(e) => setSubject(e.currentTarget.value)}
-                        onKeyDown={(e) =>
-                            e.key === "Enter" && addButtonRef.current?.click()
-                        }
+                        value={subjectInput}
+                        onChange={handleSubjectInputChange}
+                        onKeyDown={handleSubjectInputKeyDown}
                     />
                 </div>
                 <DialogFooter className="gap-2">
@@ -59,10 +70,7 @@ export default function AddToGradesDialogTrigger({
                         <Button variant="secondary">Cancel</Button>
                     </DialogClose>
                     <DialogClose asChild>
-                        <Button
-                            ref={addButtonRef}
-                            onClick={() => onAdd(subject)}
-                        >
+                        <Button ref={addButtonRef} onClick={handleAdd}>
                             Add
                         </Button>
                     </DialogClose>

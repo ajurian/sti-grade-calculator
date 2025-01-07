@@ -1,18 +1,25 @@
 import { Input } from "@/components/ui/input";
+import { ChangeEvent, FocusEvent } from "react";
 
-interface GradeFieldProps {
+interface FormFieldProps {
     id: string;
     label: string;
     value: string;
     onValueChange: (value: string) => void;
 }
 
-export default function GradeField({
+export default function FormField({
     id,
     label,
     value,
     onValueChange,
-}: GradeFieldProps) {
+}: FormFieldProps) {
+    const handleInputChange = (e: ChangeEvent<HTMLInputElement>) =>
+        onValueChange(e.currentTarget.value);
+
+    const handleInputFocus = (e: FocusEvent<HTMLInputElement>) =>
+        e.currentTarget.select();
+
     return (
         <div>
             <label className="mb-1 block font-medium" htmlFor={id}>
@@ -22,8 +29,8 @@ export default function GradeField({
                 type="number"
                 id={id}
                 value={value}
-                onChange={(e) => onValueChange(e.currentTarget.value)}
-                onFocus={(e) => e.currentTarget.select()}
+                onChange={handleInputChange}
+                onFocus={handleInputFocus}
             />
         </div>
     );

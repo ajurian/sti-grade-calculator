@@ -5,9 +5,7 @@ export function useScrollTop(ref: RefObject<HTMLElement | null>) {
 
     useEffect(() => {
         const element = ref.current;
-        if (element === null) {
-            return;
-        }
+        if (element === null) return;
 
         const handleScroll = () => setScrollTop(element.scrollTop);
 

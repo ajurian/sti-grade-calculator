@@ -1,6 +1,7 @@
 "use client";
 
 import readFromCSV from "@/utils/readwrite/readFromCSV";
+import _ from "lodash";
 import {
     createContext,
     PropsWithChildren,
@@ -27,9 +28,15 @@ export default function GradesProvider({ children }: PropsWithChildren) {
         return grades;
     }, []);
 
-    const addToGrades = useCallback((item: GradesItem) => {
-        setGrades((prevGrades) => [...prevGrades, item]);
-    }, []);
+    const addToGrades = useCallback(
+        (item: GradeItem) =>
+            setGrades((grades) => {
+                const newGrades = _.cloneDeep(grades);
+                newGrades.push(item);
+                return newGrades;
+            }),
+        [],
+    );
 
     const deleteIndices = useCallback(
         (indices: boolean[]) =>
@@ -38,10 +45,10 @@ export default function GradesProvider({ children }: PropsWithChildren) {
     );
 
     return (
-        <GradesContext.Provider
+        <GradesContext
             value={{ grades, loadFromCSV, addToGrades, deleteIndices }}
         >
             {children}
-        </GradesContext.Provider>
+        </GradesContext>
     );
 }

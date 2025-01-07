@@ -16,10 +16,10 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import { useRef, useState } from "react";
+import { ChangeEvent, KeyboardEvent, useRef, useState } from "react";
 import { Button } from "../../ui/button";
 
-interface ExportDialogTriggerProps {
+interface GradesExportDialogTriggerProps {
     isDisabled: boolean;
     onExport: (basename: string, extension: SupportedExportExtension) => void;
 }
@@ -35,21 +35,37 @@ function generateBasename() {
     );
 }
 
-export default function ExportDialogTrigger({
+export default function GradesExportDialogTrigger({
     isDisabled,
     onExport,
-}: ExportDialogTriggerProps) {
-    const [basename, setBasename] = useState("");
+}: GradesExportDialogTriggerProps) {
+    const [basenameInput, setBasenameInput] = useState("");
     const [defaultBasename, setDefaultBasename] = useState("");
     const [extension, setExtension] = useState("png");
     const saveButtonRef = useRef<HTMLButtonElement>(null);
+
+    const handleExport = () => setDefaultBasename(generateBasename());
+
+    const handleBasenameInputChange = (e: ChangeEvent<HTMLInputElement>) =>
+        setBasenameInput(e.currentTarget.value);
+
+    const handleBasenameInputKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+        if (e.key !== "Enter") return;
+        saveButtonRef.current?.click();
+    };
+
+    const handleSave = () =>
+        onExport(
+            basenameInput || defaultBasename,
+            extension as SupportedExportExtension,
+        );
 
     return (
         <Dialog>
             <DialogTrigger asChild>
                 <Button
                     disabled={isDisabled}
-                    onClick={() => setDefaultBasename(generateBasename())}
+                    onClick={handleExport}
                     className="flex-grow"
                 >
                     Export
@@ -65,11 +81,9 @@ export default function ExportDialogTrigger({
                 <div className="flex items-center gap-1">
                     <Input
                         placeholder={defaultBasename}
-                        value={basename}
-                        onChange={(e) => setBasename(e.currentTarget.value)}
-                        onKeyDown={(e) =>
-                            e.key === "Enter" && saveButtonRef.current?.click()
-                        }
+                        value={basenameInput}
+                        onChange={handleBasenameInputChange}
+                        onKeyDown={handleBasenameInputKeyDown}
                     />
                     <Select value={extension} onValueChange={setExtension}>
                         <SelectTrigger className="w-fit">
@@ -87,15 +101,7 @@ export default function ExportDialogTrigger({
                         <Button variant="secondary">Cancel</Button>
                     </DialogClose>
                     <DialogClose asChild>
-                        <Button
-                            ref={saveButtonRef}
-                            onClick={() =>
-                                onExport(
-                                    basename || defaultBasename,
-                                    extension as SupportedExportExtension,
-                                )
-                            }
-                        >
+                        <Button ref={saveButtonRef} onClick={handleSave}>
                             Save
                         </Button>
                     </DialogClose>

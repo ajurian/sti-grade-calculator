@@ -1,18 +1,18 @@
 import { cn } from "@/lib/utils";
 import { useGrades } from "../../GradesProvider";
-import AddToGradesDialogTrigger from "./AddToGradesDialogTrigger";
+import ResultAddToGradesDialogTrigger from "./ResultAddToGradesDialogTrigger";
 
-interface ResultProps {
-    calculation: Omit<GradesItem, "subject"> | null;
+interface GradeCalculatorResultProps {
+    calculation: Calculation | null;
 }
 
-export default function Result({ calculation }: ResultProps) {
+export default function GradeCalculatorResult({
+    calculation,
+}: GradeCalculatorResultProps) {
     const { addToGrades } = useGrades();
 
     const handleAddToGrades = (subject: string) => {
-        if (calculation === null) {
-            return;
-        }
+        if (calculation === null) return;
 
         addToGrades({
             subject,
@@ -70,7 +70,7 @@ export default function Result({ calculation }: ResultProps) {
                     </div>
                 )}
             </div>
-            <AddToGradesDialogTrigger
+            <ResultAddToGradesDialogTrigger
                 isDisabled={calculation === null}
                 onAdd={handleAddToGrades}
             />

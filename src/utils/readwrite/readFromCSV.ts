@@ -1,7 +1,7 @@
 import calculateGrades from "../grade/calculateGrades";
 
 export default function readFromCSV(content: string) {
-    const grades: GradesItem[] = [];
+    const grades: GradeItem[] = [];
     const rows = content.split("\n");
 
     for (let i = 1; i < rows.length; i++) {

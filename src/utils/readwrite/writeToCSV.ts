@@ -1,6 +1,6 @@
 import { stringify } from "csv-stringify/sync";
 
-export default function writeToCSV(grades: GradesItem[]) {
+export default function writeToCSV(grades: GradeItem[]) {
     const content = stringify([
         [
             "Subject",

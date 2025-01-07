@@ -2,11 +2,13 @@ import { Button } from "@/components/ui/button";
 import React, { useRef } from "react";
 import { useGrades } from "../GradesProvider";
 
-interface ImportButtonProps {
-    onImport: (grades: GradesItem[]) => void;
+interface GradesImportButtonProps {
+    onImport: (grades: GradeItem[]) => void;
 }
 
-export default function ImportButton({ onImport }: ImportButtonProps) {
+export default function GradesImportButton({
+    onImport,
+}: GradesImportButtonProps) {
     const inputRef = useRef<HTMLInputElement>(null);
     const { loadFromCSV } = useGrades();
 
@@ -27,6 +29,8 @@ export default function ImportButton({ onImport }: ImportButtonProps) {
         fr.readAsText(file);
     };
 
+    const handleImport = () => inputRef.current?.click();
+
     return (
         <>
             <input
@@ -38,7 +42,7 @@ export default function ImportButton({ onImport }: ImportButtonProps) {
             />
             <Button
                 variant="secondary"
-                onClick={() => inputRef.current?.click()}
+                onClick={handleImport}
                 className="flex-grow"
             >
                 Import

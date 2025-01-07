@@ -8,7 +8,7 @@ import {
     WidthType,
 } from "docx";
 
-export default async function writeToDocx(grades: GradesItem[]) {
+export default async function writeToDocx(grades: GradeItem[]) {
     const table = new Table({
         width: {
             size: 100,

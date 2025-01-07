@@ -8,24 +8,32 @@ import {
     TableRow,
 } from "@/components/ui/table";
 import { Dispatch, RefObject, SetStateAction } from "react";
-import GradeRow from "./GradeRow";
-import Resizable from "./Resizable";
+import DataTableResizable from "./DataTableResizable";
+import GradeRow from "./DataTableRow";
 
-interface GradesTableProps {
-    rows: GradesItem[];
+interface GradesDataTableProps {
+    rows: GradeItem[];
     checkedRows: boolean[];
     checkedCount: number;
     onCheckedChange: Dispatch<SetStateAction<boolean[]>>;
     ref: RefObject<HTMLTableElement | null>;
 }
 
-export default function GradesTable({
+export default function GradesDataTable({
     rows,
     checkedRows,
     checkedCount,
     onCheckedChange,
     ref,
-}: GradesTableProps) {
+}: GradesDataTableProps) {
+    const toggleAllCheckbox = () =>
+        onCheckedChange(Array(rows.length).fill(checkedCount !== rows.length));
+
+    const toggleSingleCheckbox = (index: number) =>
+        onCheckedChange((checkedRows) =>
+            checkedRows.with(index, !checkedRows[index]),
+        );
+
     return (
         <Table
             ref={ref}
@@ -42,20 +50,14 @@ export default function GradesTable({
                                     rows.length > 0 &&
                                     checkedCount === rows.length
                                 }
-                                onClick={() =>
-                                    onCheckedChange(
-                                        Array(rows.length).fill(
-                                            checkedCount !== rows.length,
-                                        ),
-                                    )
-                                }
+                                onClick={toggleAllCheckbox}
                             />
                         </div>
                     </TableHead>
                     <TableHead className="pr-0">
                         <span className="flex h-full items-center">
                             Subject
-                            <Resizable tableRef={ref} />
+                            <DataTableResizable tableRef={ref} />
                         </span>
                     </TableHead>
                     <TableHead className="box-content min-w-[7ch] text-center">
@@ -81,11 +83,7 @@ export default function GradesTable({
                         key={idx}
                         index={idx}
                         isChecked={checkedRows[idx]}
-                        onCheckedChange={() =>
-                            onCheckedChange((checkedRows) =>
-                                checkedRows.with(idx, !checkedRows[idx]),
-                            )
-                        }
+                        onCheckedChange={() => toggleSingleCheckbox(idx)}
                         {...item}
                     />
                 ))}

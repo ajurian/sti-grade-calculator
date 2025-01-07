@@ -26,7 +26,7 @@ export default function calculateGrades({
     const prefinalsScale = scaleGrade(prefinals);
     const finalsScale = scaleGrade(finals);
     const finalGradeScale = scaleGrade(finalGrade);
-    const status: GradesItem["status"] = isPassingGrade(finalGrade)
+    const status: GradeItem["status"] = isPassingGrade(finalGrade)
         ? "Passed"
         : "Failed";
 

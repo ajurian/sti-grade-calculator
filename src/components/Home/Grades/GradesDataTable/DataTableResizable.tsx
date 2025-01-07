@@ -1,12 +1,15 @@
 import { RefObject, useEffect, useRef, useState } from "react";
 
-interface ResizableProps {
+interface DataTableResizableProps {
     tableRef: RefObject<HTMLTableElement | null>;
 }
 
-export default function Resizable({ tableRef }: ResizableProps) {
+export default function DataTableResizable({
+    tableRef,
+}: DataTableResizableProps) {
     const [isPointerDown, setIsPointerDown] = useState(false);
     const resizableRef = useRef<HTMLSpanElement>(null);
+    const pointerXRef = useRef<number>(0);
 
     useEffect(() => {
         const element = resizableRef.current;
@@ -42,6 +45,7 @@ export default function Resizable({ tableRef }: ResizableProps) {
             }
 
             setIsPointerDown(true);
+            pointerXRef.current = e.targetTouches[0].clientX;
         };
 
         const onTouchEnd = () => {
@@ -52,22 +56,19 @@ export default function Resizable({ tableRef }: ResizableProps) {
             setIsPointerDown(false);
         };
 
-        let prevX = -1;
         const onTouchMove = (e: TouchEvent) => {
             if (!isPointerDown || element === null) return;
+            e.preventDefault();
 
-            if (prevX > -1) {
-                e.preventDefault();
-                element.style.marginLeft =
-                    Math.max(
-                        parseFloat(getComputedStyle(element).marginLeft) +
-                            e.targetTouches[0].clientX -
-                            prevX,
-                        0,
-                    ) + "px";
-            }
+            element.style.marginLeft =
+                Math.max(
+                    parseFloat(getComputedStyle(element).marginLeft) +
+                        e.targetTouches[0].clientX -
+                        pointerXRef.current,
+                    0,
+                ) + "px";
 
-            prevX = e.targetTouches[0].clientX;
+            pointerXRef.current = e.targetTouches[0].clientX;
 
             tableElement
                 ?.querySelectorAll("textarea")
