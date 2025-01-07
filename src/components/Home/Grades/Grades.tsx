@@ -99,7 +99,7 @@ export default function Grades() {
     return (
         <div
             ref={containerRef}
-            className="min-h-[384px] w-full max-w-[calc(19rem+52ch+7px)] flex-1 p-4 font-mono text-sm"
+            className="min-h-[384px] w-full max-w-[calc(19rem+52ch+14px)] flex-1 p-4 font-mono text-sm"
         >
             <div className="flex flex-wrap items-center gap-4 p-4 font-sans">
                 <div className="flex h-10 flex-grow basis-full items-center gap-4">

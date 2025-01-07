@@ -54,24 +54,49 @@ export default function GradesDataTable({
                             />
                         </div>
                     </TableHead>
-                    <TableHead className="pr-0">
+                    <TableHead className="border-r-0 pr-0">
                         <span className="flex h-full items-center">
-                            Subject
-                            <DataTableResizable tableRef={ref} />
+                            <DataTableResizable tableRef={ref} text="Subject" />
                         </span>
                     </TableHead>
-                    <TableHead className="box-content min-w-[7ch] text-center">
-                        Prelims
+                    <TableHead className="border-r-0 pr-0 text-center">
+                        <span className="flex h-full items-center">
+                            <DataTableResizable tableRef={ref} text="Prelims" />
+                        </span>
                     </TableHead>
-                    <TableHead>Midterms</TableHead>
-                    <TableHead className="whitespace-nowrap">
-                        Pre-finals
+                    <TableHead className="border-r-0 pr-0">
+                        <span className="flex h-full items-center">
+                            <DataTableResizable
+                                tableRef={ref}
+                                text="Midterms"
+                            />
+                        </span>
                     </TableHead>
-                    <TableHead className="box-content min-w-[7ch] text-center">
-                        Finals
+                    <TableHead className="whitespace-nowrap border-r-0 pr-0">
+                        <span className="flex h-full items-center">
+                            <DataTableResizable
+                                tableRef={ref}
+                                text="Pre-finals"
+                            />
+                        </span>
                     </TableHead>
-                    <TableHead className="box-content min-w-[7ch] text-center">
-                        Final Grade
+                    <TableHead className="border-r-0 pr-0 text-center">
+                        <span className="flex h-full items-center">
+                            <DataTableResizable
+                                tableRef={ref}
+                                text="Finals"
+                                className="box-content min-w-[7ch]"
+                            />
+                        </span>
+                    </TableHead>
+                    <TableHead className="border-r-0 pr-0 text-center">
+                        <span className="flex h-full items-center">
+                            <DataTableResizable
+                                tableRef={ref}
+                                text="Final Grade"
+                                className="box-content min-w-[7ch]"
+                            />
+                        </span>
                     </TableHead>
                     <TableHead>Status</TableHead>
                 </TableRow>

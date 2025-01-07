@@ -1,32 +1,58 @@
+import { cn } from "@/lib/utils";
 import { RefObject, useEffect, useRef, useState } from "react";
 
 interface DataTableResizableProps {
     tableRef: RefObject<HTMLTableElement | null>;
+    text: string;
+    className?: string;
 }
 
 export default function DataTableResizable({
+    text,
+    className,
     tableRef,
 }: DataTableResizableProps) {
     const [isPointerDown, setIsPointerDown] = useState(false);
+    const [pointerOffset, setPointerOffset] = useState(0);
+    const textRef = useRef<HTMLSpanElement>(null);
     const resizableRef = useRef<HTMLSpanElement>(null);
-    const pointerXRef = useRef<number>(0);
 
     useEffect(() => {
-        const element = resizableRef.current;
+        const textElement = textRef.current;
+        const resizableElement = resizableRef.current;
         const tableElement = tableRef.current;
 
         const onMouseDown = (e: MouseEvent) => {
-            if (e.target !== element) return;
-            setIsPointerDown(true);
-        };
-        const onMouseUp = () => setIsPointerDown(false);
-        const onMouseMove = (e: MouseEvent) => {
-            if (!isPointerDown || element === null) return;
+            if (resizableElement === null || e.target !== resizableElement)
+                return;
 
-            element.style.marginLeft =
+            setIsPointerDown(true);
+            setPointerOffset(
+                resizableElement.getBoundingClientRect().left - e.clientX,
+            );
+        };
+        const onMouseUp = () => {
+            console.log("??");
+            setIsPointerDown(false);
+        };
+        const onMouseMove = (e: MouseEvent) => {
+            if (
+                !isPointerDown ||
+                textElement === null ||
+                resizableElement === null
+            ) {
+                return;
+            }
+
+            const textElementBounds = textElement.getBoundingClientRect();
+            console.log(
+                textElementBounds.left + textElementBounds.width,
+                textElementBounds.right,
+            );
+
+            resizableElement.style.marginLeft =
                 Math.max(
-                    parseFloat(getComputedStyle(element).marginLeft) +
-                        e.movementX,
+                    e.clientX - textElementBounds.right + pointerOffset,
                     0,
                 ) + "px";
 
@@ -38,14 +64,13 @@ export default function DataTableResizable({
         };
 
         const onTouchStart = (e: TouchEvent) => {
-            if (e.target !== element) return;
+            if (e.target !== resizableElement) return;
 
             if (tableElement) {
                 tableElement.style.overflow = "hidden";
             }
 
             setIsPointerDown(true);
-            pointerXRef.current = e.targetTouches[0].clientX;
         };
 
         const onTouchEnd = () => {
@@ -57,18 +82,23 @@ export default function DataTableResizable({
         };
 
         const onTouchMove = (e: TouchEvent) => {
-            if (!isPointerDown || element === null) return;
+            if (
+                !isPointerDown ||
+                textElement === null ||
+                resizableElement === null
+            ) {
+                return;
+            }
+
             e.preventDefault();
 
-            element.style.marginLeft =
+            const textElementBounds = textElement.getBoundingClientRect();
+
+            resizableElement.style.marginLeft =
                 Math.max(
-                    parseFloat(getComputedStyle(element).marginLeft) +
-                        e.targetTouches[0].clientX -
-                        pointerXRef.current,
+                    e.targetTouches[0].clientX - textElementBounds.right,
                     0,
                 ) + "px";
-
-            pointerXRef.current = e.targetTouches[0].clientX;
 
             tableElement
                 ?.querySelectorAll("textarea")
@@ -82,7 +112,7 @@ export default function DataTableResizable({
         window.addEventListener("mousemove", onMouseMove);
         window.addEventListener("touchstart", onTouchStart);
         window.addEventListener("touchend", onTouchEnd);
-        window.addEventListener("touchmove", onTouchMove);
+        window.addEventListener("touchmove", onTouchMove, { passive: false });
 
         return () => {
             window.removeEventListener("mousedown", onMouseDown);
@@ -92,13 +122,20 @@ export default function DataTableResizable({
             window.removeEventListener("touchend", onTouchEnd);
             window.removeEventListener("touchmove", onTouchMove);
         };
-    }, [isPointerDown, tableRef]);
+    }, [isPointerDown, pointerOffset, tableRef]);
 
     return (
-        <span
-            ref={resizableRef}
-            id="subject-resizable"
-            className="relative h-full min-w-4 cursor-ew-resize after:absolute after:left-1/2 after:top-1/2 after:-translate-x-1/2 after:-translate-y-1/2 after:text-border after:content-['|']"
-        />
+        <>
+            <span ref={textRef} className={cn("pr-4", className)}>
+                {text}
+            </span>
+            <span
+                ref={resizableRef}
+                className={cn(
+                    "relative h-12 min-w-[2px] cursor-ew-resize bg-border",
+                    isPointerDown && "bg-primary",
+                )}
+            />
+        </>
     );
 }

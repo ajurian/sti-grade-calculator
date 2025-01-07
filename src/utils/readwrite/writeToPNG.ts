@@ -13,15 +13,12 @@ export default async function writeToPNG(table: HTMLTableElement) {
     const textarea = tableClone.querySelectorAll("textarea");
     const clonedTextareaValue =
         tableClone.querySelectorAll<HTMLDivElement>(".textarea-value");
-    const subjectResizable =
-        tableClone.querySelector<HTMLSpanElement>("#subject-resizable");
 
     if (
         thead === null ||
         tr === null ||
         tr.length === 0 ||
-        textarea.length === 0 ||
-        subjectResizable === null
+        textarea.length === 0
     ) {
         return null;
     }
@@ -34,9 +31,6 @@ export default async function writeToPNG(table: HTMLTableElement) {
         node.style.display = "block";
         node.style.visibility = "visible";
     });
-
-    subjectResizable.classList.remove("after:content-['|']");
-    subjectResizable.classList.add("after:content-['']");
 
     tableClone.style.position = "absolute";
     tableClone.style.left = "101vw";

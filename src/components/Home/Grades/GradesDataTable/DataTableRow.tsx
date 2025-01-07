@@ -44,7 +44,7 @@ export default function DataTableRow(props: DataTableRowProps) {
 
     return (
         <TableRow>
-            <TableCell className="sticky left-0 z-10 bg-background">
+            <TableCell className="sticky left-0 z-10 border-r-2 bg-background">
                 <div className="flex w-fit justify-center">
                     <Checkbox
                         checked={props.isChecked}
@@ -52,7 +52,7 @@ export default function DataTableRow(props: DataTableRowProps) {
                     />
                 </div>
             </TableCell>
-            <TableCell className="max-w-[7ch] break-words">
+            <TableCell className="max-w-[7ch] break-words border-r-2">
                 <textarea
                     ref={textareaRef}
                     placeholder={getDefaultSubjectName(props.index)}
@@ -72,29 +72,29 @@ export default function DataTableRow(props: DataTableRowProps) {
                         : subjectInput}
                 </div>
             </TableCell>
-            <TableCell className="text-right">
+            <TableCell className="border-r-2 text-right">
                 {props.prelims.toFixed(2)}%
                 <br />({props.prelimsScale})
             </TableCell>
-            <TableCell className="text-right">
+            <TableCell className="border-r-2 text-right">
                 {props.midterms.toFixed(2)}%
                 <br />({props.midtermsScale})
             </TableCell>
-            <TableCell className="text-right">
+            <TableCell className="border-r-2 text-right">
                 {props.prefinals.toFixed(2)}%
                 <br />({props.prefinalsScale})
             </TableCell>
-            <TableCell className="text-right">
+            <TableCell className="border-r-2 text-right">
                 {props.finals.toFixed(2)}%
                 <br />({props.finalsScale})
             </TableCell>
-            <TableCell className="text-right">
+            <TableCell className="border-r-2 text-right">
                 {props.finalGrade.toFixed(2)}%
                 <br />({props.finalGradeScale})
             </TableCell>
             <TableCell
                 className={cn(
-                    "whitespace-nowrap text-center font-semibold",
+                    "border-r-2 text-center font-semibold",
                     props.status === "Passed"
                         ? "text-green-500"
                         : "text-red-500",
