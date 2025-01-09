@@ -31,6 +31,7 @@ export default function FormField({
                 value={value}
                 onChange={handleInputChange}
                 onFocus={handleInputFocus}
+                step="any"
             />
         </div>
     );
