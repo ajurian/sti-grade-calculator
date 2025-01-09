@@ -1,10 +1,10 @@
 import GradeCalculatorGradingSystem from "@/components/Home/GradeCalculator/GradeCalculatorGradingSystem";
+import { Button } from "@/components/ui/button";
+import { SquareArrowOutUpRight } from "lucide-react";
+import Link from "next/link";
 import { useState } from "react";
 import GradeCalculatorForm from "./GradeCalculatorForm";
 import GradeCalculatorResult from "./GradeCalculatorResult";
-import Link from "next/link";
-import { SquareArrowOutUpRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
 
 export default function GradeCalculator() {
     const [calculation, setCalculation] = useState<Calculation | null>(null);

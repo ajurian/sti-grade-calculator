@@ -74,6 +74,7 @@ export default function GradeCalculatorForm({
                         Calculate
                     </Button>
                     <Button
+                        type="button"
                         className="flex-1 basis-full xs:basis-0"
                         variant="secondary"
                         onClick={handleReset}
