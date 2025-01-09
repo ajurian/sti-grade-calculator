@@ -22,7 +22,6 @@ export default function GradesImportButton({
         const fr = new FileReader();
 
         fr.onload = () => {
-            console.log(fr.result);
             const grades = loadFromCSV(fr.result as string);
             onImport(grades);
         };
@@ -44,9 +43,9 @@ export default function GradesImportButton({
             <Button
                 variant="secondary"
                 onClick={handleImport}
-                className="flex-grow"
+                className="flex-grow basis-0"
             >
-                Import
+                Import (.csv, .txt)
             </Button>
         </>
     );

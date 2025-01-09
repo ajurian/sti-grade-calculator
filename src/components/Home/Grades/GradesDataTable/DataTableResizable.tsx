@@ -31,10 +31,7 @@ export default function DataTableResizable({
                 resizableElement.getBoundingClientRect().left - e.clientX,
             );
         };
-        const onMouseUp = () => {
-            console.log("??");
-            setIsPointerDown(false);
-        };
+        const onMouseUp = () => setIsPointerDown(false);
         const onMouseMove = (e: MouseEvent) => {
             if (
                 !isPointerDown ||
@@ -45,10 +42,6 @@ export default function DataTableResizable({
             }
 
             const textElementBounds = textElement.getBoundingClientRect();
-            console.log(
-                textElementBounds.left + textElementBounds.width,
-                textElementBounds.right,
-            );
 
             resizableElement.style.marginLeft =
                 Math.max(
