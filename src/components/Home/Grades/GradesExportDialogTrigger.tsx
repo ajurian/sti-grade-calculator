@@ -66,7 +66,7 @@ export default function GradesExportDialogTrigger({
                 <Button
                     disabled={isDisabled}
                     onClick={handleExport}
-                    className="flex-grow"
+                    className="flex-grow basis-0"
                 >
                     Export
                 </Button>

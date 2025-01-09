@@ -104,12 +104,18 @@ export default function Grades() {
             <div className="flex flex-wrap items-center gap-4 p-4 font-sans">
                 <div className="flex h-10 flex-grow basis-full items-center gap-4">
                     <h2 className="mr-auto text-xl font-medium">Grades</h2>
+
                     {checkedCount > 0 && (
-                        <Button variant="destructive" onClick={handleDelete}>
+                        <Button
+                            className="self-end"
+                            variant="destructive"
+                            onClick={handleDelete}
+                        >
                             Delete ({checkedCount})
                         </Button>
                     )}
                 </div>
+
                 <GradesExportDialogTrigger
                     isDisabled={grades.length === 0}
                     onExport={handleExport}
